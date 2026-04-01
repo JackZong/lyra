@@ -1,5 +1,20 @@
 <template>
   <div class="app-layout">
+    <button
+      v-if="!settings.sidebarOpen"
+      class="sidebar-reopen-btn"
+      @click="settings.toggleSidebar()"
+      title="显示侧边栏"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+      </svg>
+    </button>
     <div class="app-body">
       <Sidebar />
       <EditorView ref="editorViewRef" />
@@ -113,11 +128,33 @@ onUnmounted(() => {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  position: relative;
 }
 
 .app-body {
   flex: 1;
   display: flex;
   overflow: hidden;
+}
+
+.sidebar-reopen-btn {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #7f7f7f;
+  z-index: 30;
+}
+
+.sidebar-reopen-btn:hover {
+  background: #f5f5f5;
+  color: #555;
 }
 </style>

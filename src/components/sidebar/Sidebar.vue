@@ -6,7 +6,7 @@
         <button
           class="tab-btn"
           :class="{ active: settings.sidebarTab === 'files' }"
-          @click="settings.setSidebarTab('files')"
+          @click="toggleSidebarTab('files')"
           title="文件视图"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -16,7 +16,7 @@
         <button
           class="tab-btn"
           :class="{ active: settings.sidebarTab === 'outline' }"
-          @click="settings.setSidebarTab('outline')"
+          @click="toggleSidebarTab('outline')"
           title="大纲视图"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -28,7 +28,7 @@
             <line x1="3" y1="18" x2="3.01" y2="18"></line>
           </svg>
         </button>
-        <button class="icon-btn" @click="() => files.openWorkspace()" v-if="settings.sidebarTab === 'files'" title="打开文件夹">
+        <button class="icon-btn" @click="files.openWorkspace()" v-if="settings.sidebarTab === 'files'" title="打开文件夹">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
           </svg>
@@ -59,7 +59,7 @@
           <path d="M14 14h12M14 20h8M14 26h10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
         </svg>
         <p>打开一个文件夹<br>以查看文件树</p>
-        <button class="primary-btn mt-2" @click="() => files.openWorkspace()">打开文件夹</button>
+        <button class="primary-btn mt-2" @click="files.openWorkspace()">打开文件夹</button>
       </div>
       </template>
 
@@ -86,6 +86,14 @@ const workspaceName = computed(() => {
   const parts = files.workspacePath.split(/[\/\\]/)
   return parts.pop() || '项目'
 })
+
+function toggleSidebarTab(tab: 'files' | 'outline') {
+  if (settings.sidebarOpen && settings.sidebarTab === tab) {
+    settings.toggleSidebar()
+    return
+  }
+  settings.setSidebarTab(tab)
+}
 </script>
 
 <style scoped>
