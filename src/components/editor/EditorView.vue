@@ -1,6 +1,5 @@
 <template>
   <div class="editor-view">
-    <TabBar v-if="editorStore.tabs.length > 1" />
     <div class="editor-root scrollable" v-if="editorStore.activeTab">
       <MilkdownProvider>
         <MilkdownEditor :key="editorStore.activeTab.id" />
@@ -15,7 +14,6 @@
 <script setup lang="ts">
 import { MilkdownProvider } from '@milkdown/vue'
 import MilkdownEditor from './MilkdownEditor.vue'
-import TabBar from '../common/TabBar.vue'
 import { useEditorStore } from '../../stores/editor'
 
 const editorStore = useEditorStore()

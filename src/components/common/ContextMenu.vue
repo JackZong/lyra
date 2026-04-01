@@ -33,33 +33,35 @@ function handleClick(item: MenuItem) {
 .context-menu {
   position: fixed;
   z-index: 9999;
-  min-width: 150px;
-  background-color: var(--bg-color);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  padding: 4px 0;
-  font-size: 13px;
+  min-width: 160px;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+  padding: 4px;
+  font-size: 12px;
+  line-height: 1;
 }
 
 .menu-item {
-  padding: 8px 16px;
+  padding: 6px 10px;
   cursor: pointer;
-  color: var(--text-color);
-  transition: all 0.1s;
+  color: #333;
+  border-radius: 6px;
+  transition: background-color 0.12s ease, color 0.12s ease;
 }
 
 .menu-item:hover {
-  background-color: var(--primary-color);
-  color: var(--bg-color);
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #222;
 }
 
 .menu-item.is-danger {
-  color: #ff4d4f;
+  color: #d92d20;
 }
 
 .menu-item.is-danger:hover {
-  background-color: #ff4d4f;
-  color: #fff;
+  background-color: rgba(217, 45, 32, 0.10);
+  color: #b42318;
 }
 </style>
