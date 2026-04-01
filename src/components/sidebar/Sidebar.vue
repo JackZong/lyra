@@ -1,17 +1,44 @@
 <template>
   <aside class="sidebar scrollable" :class="{ 'sidebar-open': settings.sidebarOpen }">
     <div class="sidebar-header">
-      <h3 class="sidebar-title">文件</h3>
-      <button class="icon-btn" @click="() => files.openWorkspace()" title="打开工作区">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-          <line x1="12" y1="11" x2="12" y2="17"></line>
-          <line x1="9" y1="14" x2="15" y2="14"></line>
-        </svg>
-      </button>
+      <span class="sidebar-title">{{ settings.sidebarTab === 'outline' ? '大纲' : '文件' }}</span>
+      <div class="sidebar-actions">
+        <button
+          class="tab-btn"
+          :class="{ active: settings.sidebarTab === 'files' }"
+          @click="settings.setSidebarTab('files')"
+          title="文件视图"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </button>
+        <button
+          class="tab-btn"
+          :class="{ active: settings.sidebarTab === 'outline' }"
+          @click="settings.setSidebarTab('outline')"
+          title="大纲视图"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+        </button>
+        <button class="icon-btn" @click="() => files.openWorkspace()" v-if="settings.sidebarTab === 'files'" title="打开文件夹">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </button>
+      </div>
     </div>
     
-    <div class="sidebar-content">
+    <div class="sidebar-content" :class="{ 'sidebar-content-outline': settings.sidebarTab === 'outline' }">
+      <!-- 文件树视图 -->
+      <template v-if="settings.sidebarTab === 'files'">
       <!-- 渲染文件树 -->
       <div v-if="files.fileTree.length > 0" class="file-tree-container">
         <div class="workspace-label">
@@ -34,6 +61,12 @@
         <p>打开一个文件夹<br>以查看文件树</p>
         <button class="primary-btn mt-2" @click="() => files.openWorkspace()">打开文件夹</button>
       </div>
+      </template>
+
+      <!-- 大纲视图 -->
+      <template v-else-if="settings.sidebarTab === 'outline'">
+        <OutlineList />
+      </template>
     </div>
   </aside>
 </template>
@@ -43,6 +76,7 @@ import { computed } from 'vue'
 import { useSettingsStore } from '../../stores/settings'
 import { useFilesStore } from '../../stores/files'
 import FileTreeNode from './FileTreeNode.vue'
+import OutlineList from './OutlineList.vue'
 
 const settings = useSettingsStore()
 const files = useFilesStore()
@@ -58,7 +92,7 @@ const workspaceName = computed(() => {
 .sidebar {
   width: 0;
   overflow: hidden;
-  background-color: var(--color-bg-secondary);
+  background-color: #f3f3f3;
   border-right: 1px solid var(--color-border-subtle);
   transition: width var(--transition-slow);
   flex-shrink: 0;
@@ -70,46 +104,65 @@ const workspaceName = computed(() => {
   width: var(--sidebar-width);
 }
 
+
+
 .sidebar-header {
-  padding: var(--space-3) var(--space-4);
+  padding: 0 10px;
   border-bottom: 1px solid var(--color-border-subtle);
   flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 34px;
 }
 
 .sidebar-title {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6f6f6f;
 }
 
+.sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tab-btn,
 .icon-btn {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--color-text-tertiary);
+  color: #8f8f8f;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
-  border-radius: var(--radius-sm);
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 4px;
+  transition: all var(--transition-fast);
 }
 
+.tab-btn:hover,
 .icon-btn:hover {
-  background-color: var(--color-bg-hover);
-  color: var(--color-text-primary);
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #4f4f4f;
+}
+
+.tab-btn.active {
+  color: #4f4f4f;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .sidebar-content {
   flex: 1;
   overflow-y: auto;
-  padding: var(--space-3) var(--space-2);
+  padding: 6px 0;
+}
+
+.sidebar-content-outline {
+  padding: 0;
 }
 
 .file-tree-container {
@@ -118,13 +171,11 @@ const workspaceName = computed(() => {
 }
 
 .workspace-label {
-  font-size: var(--text-xs);
-  color: var(--color-text-tertiary);
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: var(--space-2);
-  padding: 0 var(--space-2);
-  letter-spacing: 0.5px;
+  font-size: 11px;
+  color: #939393;
+  font-weight: 500;
+  margin: 2px 8px 4px;
+  padding: 0;
 }
 
 .sidebar-empty {

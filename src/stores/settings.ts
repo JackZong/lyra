@@ -10,8 +10,8 @@ export const useSettingsStore = defineStore('settings', () => {
   const themeMode = ref<'light' | 'dark' | 'system'>('system')
   // 侧边栏是否展开
   const sidebarOpen = ref(true)
-  // 大纲视图是否展开
-  const outlineOpen = ref(false)
+  // 侧边栏选项卡
+  const sidebarTab = ref<'files' | 'outline'>('files')
   // 全局搜索面板是否展开
   const omniSearchOpen = ref(false)
   // 设置聚合面板是否弹出
@@ -30,7 +30,7 @@ export const useSettingsStore = defineStore('settings', () => {
         const parsed = JSON.parse(stored)
         if (parsed.themeMode) themeMode.value = parsed.themeMode
         if (parsed.sidebarOpen !== undefined) sidebarOpen.value = parsed.sidebarOpen
-        if (parsed.outlineOpen !== undefined) outlineOpen.value = parsed.outlineOpen
+        if (parsed.sidebarTab !== undefined) sidebarTab.value = parsed.sidebarTab
         if (parsed.editorFontSize) editorFontSize.value = parsed.editorFontSize
         if (parsed.editorFontFamily) editorFontFamily.value = parsed.editorFontFamily
         if (parsed.editorMaxWidth !== undefined) editorMaxWidth.value = parsed.editorMaxWidth
@@ -46,7 +46,7 @@ export const useSettingsStore = defineStore('settings', () => {
       localStorage.setItem('lyra:settings', JSON.stringify({
         themeMode: themeMode.value,
         sidebarOpen: sidebarOpen.value,
-        outlineOpen: outlineOpen.value,
+        sidebarTab: sidebarTab.value,
         editorFontSize: editorFontSize.value,
         editorFontFamily: editorFontFamily.value,
         editorMaxWidth: editorMaxWidth.value 
@@ -58,7 +58,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   // 挂载一个监听所有关键状态变化的机制
   watch(
-    () => [themeMode.value, sidebarOpen.value, outlineOpen.value, editorFontSize.value, editorFontFamily.value, editorMaxWidth.value], 
+    () => [themeMode.value, sidebarOpen.value, sidebarTab.value, editorFontSize.value, editorFontFamily.value, editorMaxWidth.value], 
     () => {
       saveSettings()
       applyTheme() // 重绘字体或环境变量
@@ -106,10 +106,13 @@ export const useSettingsStore = defineStore('settings', () => {
   }
   
   /**
-   * 切换大纲试图
+   * 切换侧边栏选项卡
    */
-  function toggleOutline() {
-    outlineOpen.value = !outlineOpen.value
+  function setSidebarTab(tab: 'files' | 'outline') {
+    sidebarTab.value = tab
+    if (!sidebarOpen.value) {
+      sidebarOpen.value = true
+    }
   }
 
   /**
@@ -143,7 +146,7 @@ export const useSettingsStore = defineStore('settings', () => {
   return {
     themeMode,
     sidebarOpen,
-    outlineOpen,
+    sidebarTab,
     omniSearchOpen,
     settingsModalOpen,
     editorFontSize,
@@ -153,7 +156,7 @@ export const useSettingsStore = defineStore('settings', () => {
     applyTheme,
     toggleTheme,
     toggleSidebar,
-    toggleOutline,
+    setSidebarTab,
     toggleOmniSearch,
     toggleSettingsModal
   }

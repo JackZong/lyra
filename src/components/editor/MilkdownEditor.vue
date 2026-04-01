@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { nextTick, onMounted, onUnmounted, watch } from 'vue'
 import { Milkdown, useEditor, useInstance } from '@milkdown/vue'
 import { Editor, rootCtx, defaultValueCtx } from '@milkdown/kit/core'
 import { commonmark } from '@milkdown/kit/preset/commonmark'
@@ -20,12 +20,13 @@ import { replaceAll } from '@milkdown/kit/utils'
 import { codeBlockComponent, codeBlockConfig } from '@milkdown/kit/component/code-block'
 import { tableBlock } from '@milkdown/kit/component/table-block'
 import { linkTooltipPlugin } from '@milkdown/kit/component/link-tooltip'
-import { imageBlockComponent } from '@milkdown/kit/component/image-block'
+import { imageBlockComponent, imageBlockConfig } from '@milkdown/kit/component/image-block'
 import { listItemBlockComponent } from '@milkdown/kit/component/list-item-block'
 
 // CodeMirror 语言包
 import { languages } from '@codemirror/language-data'
 import { oneDark } from '@codemirror/theme-one-dark'
+import { convertFileSrc } from '@tauri-apps/api/core'
 
 // 数学公式 (KaTeX)
 import { math } from '@milkdown/plugin-math'
@@ -36,91 +37,81 @@ import { useFileSystem } from '../../composables/useFileSystem'
 
 const editorStore = useEditorStore()
 const { triggerAutoSave } = useFileSystem()
-
-// 示例 Markdown 内容（展示里程碑 2 新特性）
-const initialContent = editorStore.content || `# 欢迎使用 Lyra
-
-Lyra 是一款优雅的所见即所得 Markdown 编辑器。
-
-## 功能特性
-
-- **所见即所得**：输入即渲染，沉浸式写作体验
-- *斜体文字*、~~删除线~~、\`行内代码\`
-- 支持 [链接](https://github.com) 和图片
-
-## 代码块（语法高亮）
-
-\`\`\`typescript
-interface Editor {
-  name: string
-  version: number
-  features: string[]
-}
-
-const lyra: Editor = {
-  name: 'Lyra',
-  version: 0.1,
-  features: ['WYSIWYG', 'Markdown', '语法高亮']
-}
-\`\`\`
-
-\`\`\`python
-def fibonacci(n: int) -> list[int]:
-    """生成斐波那契数列"""
-    fib = [0, 1]
-    for i in range(2, n):
-        fib.append(fib[-1] + fib[-2])
-    return fib
-
-print(fibonacci(10))
-\`\`\`
-
-## 数学公式
-
-行内公式：质能方程 $E = mc^2$ 是物理学中最著名的公式。
-
-块级公式：
-
-$$
-\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}
-$$
-
-$$
-f(x) = \\sum_{n=0}^{\\infty} \\frac{f^{(n)}(a)}{n!}(x-a)^n
-$$
-
-## 引用
-
-> 好的工具应该是隐形的，让你专注于真正重要的事 — 写作本身。
-
-## 表格
-
-| 功能 | 状态 | 里程碑 |
-|------|------|--------|
-| 基础 Markdown | ✅ 已完成 | M1 |
-| 代码语法高亮 | ✅ 已完成 | M2 |
-| 数学公式 | ✅ 已完成 | M2 |
-| 表格增强 | ✅ 已完成 | M2 |
-
-## 任务列表
-
-- [x] 搭建项目框架
-- [x] 集成 Milkdown 编辑器
-- [x] 代码块语法高亮
-- [x] 数学公式支持
-- [ ] 文件树管理
-- [ ] 导出 PDF
-
----
-
-开始你的写作之旅吧 ✨
-`
+const tabIdAtMount = editorStore.activeTabId
+const initialContent = editorStore.content || ''
 
 // 初始化时同步内容到 store
 editorStore.updateContent(initialContent)
 
 // 防止循环更新的标记
 let isInternalUpdate = false
+let mutationObserver: MutationObserver | null = null
+
+function normalizeFsPath(path: string): string {
+  const normalized = path.replace(/\\/g, '/')
+  const windowsDriveMatch = normalized.match(/^([a-zA-Z]:)(\/.*)?$/)
+  const prefix = windowsDriveMatch ? windowsDriveMatch[1] : (normalized.startsWith('/') ? '/' : '')
+  const raw = windowsDriveMatch ? (windowsDriveMatch[2] || '') : normalized.replace(/^\/+/, '')
+  const segments = raw.split('/').filter(Boolean)
+  const stack: string[] = []
+
+  for (const segment of segments) {
+    if (segment === '.') continue
+    if (segment === '..') {
+      if (stack.length > 0) stack.pop()
+      continue
+    }
+    stack.push(segment)
+  }
+
+  if (windowsDriveMatch) {
+    return `${prefix}/${stack.join('/')}`
+  }
+  return `${prefix}${stack.join('/')}`
+}
+
+function toAssetUrl(path: string): string {
+  return convertFileSrc(normalizeFsPath(path))
+}
+
+function resolveRelativeImagePath(src: string): string {
+  const trimmed = src.trim()
+  if (!trimmed) return src
+
+  if (
+    /^(https?:|data:|blob:|asset:|tauri:|file:)/i.test(trimmed) ||
+    trimmed.startsWith('//')
+  ) {
+    return trimmed
+  }
+
+  const currentPath = editorStore.currentFilePath
+  if (!currentPath) return trimmed
+
+  const baseDir = currentPath.replace(/[\/\\][^\/\\]+$/, '')
+  const isAbsolutePosix = trimmed.startsWith('/')
+  const isAbsoluteWindows = /^[a-zA-Z]:[\\/]/.test(trimmed)
+
+  if (isAbsoluteWindows || isAbsolutePosix) {
+    return toAssetUrl(trimmed)
+  }
+
+  const normalizedBase = normalizeFsPath(baseDir)
+  const normalizedRel = trimmed.replace(/\\/g, '/')
+  return toAssetUrl(`${normalizedBase}/${normalizedRel}`)
+}
+
+function patchImageSrcForLocalMarkdown() {
+  const images = document.querySelectorAll('.editor-root .ProseMirror img')
+  images.forEach((img) => {
+    const original = img.getAttribute('src') || ''
+    if (!original) return
+    const resolved = resolveRelativeImagePath(original)
+    if (resolved !== original) {
+      img.setAttribute('src', resolved)
+    }
+  })
+}
 
 useEditor((root) =>
   Editor.make()
@@ -139,9 +130,17 @@ useEditor((root) =>
         copyText: '复制',
       }))
 
+      // 图片块配置：通过 proxyDomURL 在渲染层解析本地图片路径
+      ctx.update(imageBlockConfig.key, (defaultCfg) => ({
+        ...defaultCfg,
+        proxyDomURL: (url: string) => resolveRelativeImagePath(url),
+      }))
+
       // 监听 Markdown 内容变化
       ctx.get(listenerCtx)
         .markdownUpdated((_ctx, markdown) => {
+          // 避免标签切换时旧编辑器实例把内容写回到新标签页。
+          if (editorStore.activeTabId !== tabIdAtMount) return
           isInternalUpdate = true
           editorStore.updateContent(markdown)
           
@@ -173,11 +172,36 @@ useEditor((root) =>
 // 编辑器实例引用
 const [loading, getInstance] = useInstance()
 
-// 监听外部内容变化（打开文件时）
-watch(() => editorStore.content, (newContent) => {
+// 监听外部内容变化（打开文件时）以及编辑器加载完成事件
+watch([() => editorStore.content, loading], ([newContent, isLoading]) => {
   if (isInternalUpdate) return
-  if (loading.value) return
+  if (isLoading) return
   const editor = getInstance()
-  if (editor) editor.action(replaceAll(newContent))
+  if (editor) {
+    editor.action(replaceAll(newContent))
+    nextTick(() => patchImageSrcForLocalMarkdown())
+  }
 })
+
+onMounted(() => {
+  patchImageSrcForLocalMarkdown()
+  const root = document.querySelector('.editor-root .ProseMirror')
+  if (!root) return
+
+  mutationObserver = new MutationObserver(() => {
+    patchImageSrcForLocalMarkdown()
+  })
+  mutationObserver.observe(root, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['src']
+  })
+})
+
+onUnmounted(() => {
+  mutationObserver?.disconnect()
+  mutationObserver = null
+})
+
 </script>

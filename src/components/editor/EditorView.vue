@@ -1,9 +1,9 @@
 <template>
   <div class="editor-view">
-    <TabBar v-if="editorStore.tabs.length > 0" />
+    <TabBar v-if="editorStore.tabs.length > 1" />
     <div class="editor-root scrollable" v-if="editorStore.activeTab">
       <MilkdownProvider>
-        <MilkdownEditor />
+        <MilkdownEditor :key="editorStore.activeTab.id" />
       </MilkdownProvider>
     </div>
     <div v-else class="editor-empty">

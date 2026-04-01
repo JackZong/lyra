@@ -83,15 +83,15 @@
   --transition-slow: 300ms ease;
 
   /* ---- 布局 ---- */
-  --titlebar-height: 38px;
-  --sidebar-width: 260px;
-  --statusbar-height: 28px;
+  --titlebar-height: 0px;
+  --sidebar-width: 220px;
+  --statusbar-height: 0px;
   --toolbar-height: 40px;
 
   /* ---- 编辑器 ---- */
-  --editor-max-width: 760px;
-  --editor-padding-x: 60px;
-  --editor-padding-y: 40px;
+  --editor-max-width: 780px;
+  --editor-padding-x: 36px;
+  --editor-padding-y: 24px;
 
   /* ---- Crepe 组件变量映射 (Light) ---- */
   --crepe-color-background: var(--color-bg-primary);

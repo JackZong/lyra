@@ -10,6 +10,22 @@ export function useFileSystem() {
   const editorStore = useEditorStore()
 
   /**
+   * 兼容历史 Markdown 中的 HTML <img> 标签：
+   * 将其转换为标准 Markdown 图片语法，便于 Milkdown 正常渲染。
+   */
+  function normalizeImageTags(markdown: string): string {
+    return markdown.replace(/<img\b[^>]*>/gi, (tag) => {
+      const srcMatch = tag.match(/\bsrc\s*=\s*["']([^"']+)["']/i)
+      if (!srcMatch?.[1]) return tag
+
+      const altMatch = tag.match(/\balt\s*=\s*["']([^"']*)["']/i)
+      const src = srcMatch[1].replace(/\\/g, '/').trim()
+      const alt = (altMatch?.[1] || 'image').replace(/\]/g, '\\]')
+      return `![${alt}](${src})`
+    })
+  }
+
+  /**
    * 自动防抖保存的定时器
    */
   let autoSaveTimer: ReturnType<typeof setTimeout> | null = null
@@ -53,12 +69,13 @@ export function useFileSystem() {
   /**
    * 根据绝对路径直接打开文件 (用于侧边栏文件树)
    */
-  async function openFilePath(path: string) {
+  async function openFilePath(path: string, options?: { activate?: boolean }) {
     try {
       editorStore.isLoading = true
-      const content = await invoke<string>('read_file', { path })
+      const rawContent = await invoke<string>('read_file', { path })
+      const content = normalizeImageTags(rawContent)
       const fileName = path.split(/[\/\\]/).pop() || '未命名'
-      editorStore.openTab(path, fileName, content)
+      editorStore.openTab(path, fileName, content, options?.activate ?? true)
       return path
     } catch (error) {
       console.error(`读取文件 ${path} 失败:`, error)

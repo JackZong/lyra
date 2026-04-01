@@ -1,15 +1,8 @@
 <template>
   <footer class="statusbar no-select">
     <div class="statusbar-left">
-      <span class="statusbar-item" title="字数">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M2 3h8M2 6h6M2 9h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-        </svg>
-        {{ editorStore.wordCount }} 字
-      </span>
-      <span class="statusbar-item" title="字符数">
-        {{ editorStore.charCount }} 字符
-      </span>
+      <span class="statusbar-item" title="字数">{{ editorStore.wordCount }} 字</span>
+      <span class="statusbar-item" title="字符数">{{ editorStore.charCount }} 字符</span>
     </div>
 
     <div class="statusbar-right">
@@ -30,8 +23,8 @@ const editorStore = useEditorStore()
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-4);
-  background-color: var(--color-bg-secondary);
+  padding: 0 6px;
+  background-color: #f7f7f7;
   border-top: 1px solid var(--color-border-subtle);
   flex-shrink: 0;
 }
@@ -40,12 +33,12 @@ const editorStore = useEditorStore()
 .statusbar-right {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .statusbar-item {
-  font-size: var(--text-xs);
-  color: var(--color-text-tertiary);
+  font-size: 10px;
+  color: #989898;
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);

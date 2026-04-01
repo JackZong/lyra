@@ -9,74 +9,74 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: var(--editor-padding-y) var(--editor-padding-x);
-  background-color: var(--color-bg-primary);
+  background-color: #ffffff;
 }
 
 /* ProseMirror 编辑区域 */
 .editor-root .milkdown {
   max-width: var(--editor-max-width);
   margin: 0 auto;
-  min-height: calc(100vh - var(--titlebar-height) - var(--statusbar-height) - 80px);
+  min-height: calc(100vh - var(--titlebar-height) - var(--statusbar-height) - 52px);
 }
 
 .editor-root .ProseMirror {
   outline: none;
-  font-family: var(--editor-font-family, var(--font-sans));
-  font-size: var(--editor-font-size, var(--text-base));
-  line-height: var(--leading-relaxed);
-  color: var(--color-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--editor-font-size, 16px);
+  line-height: 1.72;
+  color: #444;
 }
 
 /* ---- 标题 ---- */
 .editor-root .ProseMirror h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: var(--leading-tight);
-  margin-top: var(--space-10);
-  margin-bottom: var(--space-4);
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--color-border-subtle);
-  color: var(--color-text-primary);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #ececec;
+  color: #2d2d2d;
 }
 
 .editor-root .ProseMirror h2 {
-  font-size: 1.5rem;
+  font-size: 24px;
   font-weight: 600;
-  line-height: var(--leading-tight);
-  margin-top: var(--space-8);
-  margin-bottom: var(--space-3);
-  color: var(--color-text-primary);
+  line-height: 1.4;
+  margin-top: 18px;
+  margin-bottom: 7px;
+  color: #303030;
 }
 
 .editor-root .ProseMirror h3 {
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 600;
-  margin-top: var(--space-6);
-  margin-bottom: var(--space-2);
+  margin-top: 14px;
+  margin-bottom: 6px;
 }
 
 .editor-root .ProseMirror h4 {
-  font-size: 1.1rem;
+  font-size: 17px;
   font-weight: 600;
-  margin-top: var(--space-5);
-  margin-bottom: var(--space-2);
+  margin-top: 12px;
+  margin-bottom: 5px;
 }
 
 .editor-root .ProseMirror h5,
 .editor-root .ProseMirror h6 {
-  font-size: 1rem;
+  font-size: 15px;
   font-weight: 600;
-  margin-top: var(--space-4);
-  margin-bottom: var(--space-2);
+  margin-top: 10px;
+  margin-bottom: 4px;
 }
 
 .editor-root .ProseMirror h6 {
-  color: var(--color-text-secondary);
+  color: #555;
 }
 
 /* ---- 段落 ---- */
 .editor-root .ProseMirror p {
-  margin-bottom: var(--space-3);
+  margin-bottom: 8px;
 }
 
 /* ---- 行内样式 ---- */
@@ -203,7 +203,6 @@
 .editor-root .ProseMirror img {
   max-width: 100%;
   height: auto;
-  border-radius: var(--radius-md);
   margin: var(--space-3) 0;
 }
 
@@ -792,7 +791,6 @@
 /* ---- 图片块组件 ---- */
 .editor-root .milkdown-image-block {
   margin: var(--space-4) 0;
-  border-radius: var(--radius-lg);
   overflow: hidden;
   position: relative;
 }
@@ -801,7 +799,11 @@
   display: block;
   max-width: 100%;
   height: auto;
-  border-radius: var(--radius-lg);
+}
+
+/* 隐藏图片块左上角操作图标（如评论/说明入口） */
+.editor-root .milkdown-image-block .operation {
+  display: none !important;
 }
 
 .editor-root .milkdown-image-block .image-caption {

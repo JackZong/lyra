@@ -6,7 +6,7 @@
       :class="{ 'is-active': editorStore.activeTabId === node.path, 'is-dir': node.is_dir }"
       @click.stop="handleClick"
       @contextmenu.prevent="handleRightClick"
-      :style="{ paddingLeft: `${depth * 12 + 8}px` }"
+      :style="{ paddingLeft: `${depth * 10 + 6}px` }"
     >
       <!-- 文件夹展开/折叠图标 -->
       <div v-if="node.is_dir" class="chevron" :class="{ 'is-open': node.isOpen }">
@@ -157,33 +157,34 @@ function handleRightClick(e: MouseEvent) {
 .node-row {
   display: flex;
   align-items: center;
-  padding: 4px 8px;
+  padding: 2px 6px;
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   user-select: none;
-  color: var(--color-text-secondary);
-  font-size: var(--text-sm);
+  color: #626262;
+  font-size: 12px;
   transition: background-color var(--transition-fast), color var(--transition-fast);
-  margin-bottom: 2px;
+  margin-bottom: 0;
+  min-height: 20px;
 }
 
 .node-row:hover {
-  background-color: var(--color-bg-hover);
-  color: var(--color-text-primary);
+  background-color: rgba(0, 0, 0, 0.04);
+  color: #2f2f2f;
 }
 
 .node-row.is-active {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary-dark);
+  background-color: rgba(0, 0, 0, 0.08);
+  color: #1f1f1f;
 }
 
 .chevron {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 4px;
+  margin-right: 3px;
   transition: transform var(--transition-fast);
   color: var(--color-text-tertiary);
 }
@@ -193,13 +194,13 @@ function handleRightClick(e: MouseEvent) {
 }
 
 .file-icon-placeholder {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 4px;
-  opacity: 0.5;
+  margin-right: 3px;
+  opacity: 0.46;
 }
 
 .node-name {

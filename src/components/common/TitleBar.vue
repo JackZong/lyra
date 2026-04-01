@@ -1,15 +1,6 @@
 <template>
   <header class="titlebar no-select" data-tauri-drag-region>
-    <div class="titlebar-left">
-      <!-- 侧边栏切换按钮 -->
-      <button class="icon-btn" id="toggle-sidebar" @click="settings.toggleSidebar" title="切换侧边栏">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <rect x="2" y="3" width="12" height="1.5" rx="0.75" fill="currentColor"/>
-          <rect x="2" y="7.25" width="12" height="1.5" rx="0.75" fill="currentColor"/>
-          <rect x="2" y="11.5" width="12" height="1.5" rx="0.75" fill="currentColor"/>
-        </svg>
-      </button>
-    </div>
+    <div class="titlebar-left" data-tauri-drag-region></div>
 
     <div class="titlebar-center" data-tauri-drag-region>
       <span class="titlebar-filename">
@@ -19,25 +10,17 @@
     </div>
 
     <div class="titlebar-right">
-      <!-- 搜索切换 -->
+      <span class="titlebar-meta">{{ editorStore.wordCount }} 字</span>
+
       <button class="icon-btn" id="toggle-search" @click="settings.toggleOmniSearch" title="全局搜索 (Cmd+P)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
       </button>
 
-      <!-- 设置弹窗 -->
-      <button class="icon-btn" id="toggle-settings" @click="settings.toggleSettingsModal" title="设置 (Cmd+,)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-        </svg>
-      </button>
-
-      <!-- 大纲切换 -->
-      <button class="icon-btn" id="toggle-outline" @click="settings.toggleOutline" title="大纲目录" :class="{'is-active': settings.outlineOpen}">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <button class="icon-btn" id="toggle-outline" @click="toggleOutlineSidebar" title="大纲目录" :class="{'is-active': settings.sidebarTab === 'outline' && settings.sidebarOpen}">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="8" y1="6" x2="21" y2="6"></line>
           <line x1="8" y1="12" x2="21" y2="12"></line>
           <line x1="8" y1="18" x2="21" y2="18"></line>
@@ -47,14 +30,10 @@
         </svg>
       </button>
       
-      <!-- 主题切换 -->
-      <button class="icon-btn" id="toggle-theme" @click="settings.toggleTheme" title="切换主题">
-        <svg v-if="settings.getEffectiveTheme() === 'light'" width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-        </svg>
-        <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M13.36 10.03A6 6 0 015.97 2.64 6 6 0 1013.36 10.03z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <button class="icon-btn" id="toggle-settings" @click="settings.toggleSettingsModal" title="设置 (Cmd+,)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
         </svg>
       </button>
     </div>
@@ -67,6 +46,14 @@ import { useSettingsStore } from '../../stores/settings'
 
 const editorStore = useEditorStore()
 const settings = useSettingsStore()
+
+function toggleOutlineSidebar() {
+  if (settings.sidebarOpen && settings.sidebarTab === 'outline') {
+    settings.setSidebarTab('files')
+    return
+  }
+  settings.setSidebarTab('outline')
+}
 </script>
 
 <style scoped>
@@ -75,8 +62,8 @@ const settings = useSettingsStore()
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-3);
-  background-color: var(--color-bg-secondary);
+  padding: 0 6px;
+  background-color: #f8f8f8;
   border-bottom: 1px solid var(--color-border-subtle);
   -webkit-app-region: drag;
   flex-shrink: 0;
@@ -86,8 +73,8 @@ const settings = useSettingsStore()
 .titlebar-right {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
-  min-width: 60px;
+  gap: 2px;
+  min-width: 72px;
   -webkit-app-region: no-drag;
 }
 
@@ -102,9 +89,9 @@ const settings = useSettingsStore()
 }
 
 .titlebar-filename {
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--color-text-secondary);
+  font-size: 11px;
+  font-weight: 400;
+  color: #757575;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -115,8 +102,27 @@ const settings = useSettingsStore()
 
 .dirty-indicator {
   color: var(--color-warning);
-  font-size: 10px;
+  font-size: 9px;
   animation: pulse 2s ease-in-out infinite;
+}
+
+.titlebar :deep(.icon-btn) {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  color: #9b9b9b;
+}
+
+.titlebar :deep(.icon-btn:hover) {
+  color: #666;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.titlebar-meta {
+  font-size: 10px;
+  color: #9a9a9a;
+  margin-right: 2px;
+  line-height: 1;
 }
 
 @keyframes pulse {
