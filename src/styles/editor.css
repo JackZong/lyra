@@ -1,0 +1,901 @@
+/* ============================================
+ * Lyra — Milkdown 编辑器样式
+ * 覆盖 ProseMirror 默认样式，打造 Typora 风格
+ * ============================================ */
+
+/* 编辑器容器 */
+.editor-root {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--editor-padding-y) var(--editor-padding-x);
+  background-color: var(--color-bg-primary);
+}
+
+/* ProseMirror 编辑区域 */
+.editor-root .milkdown {
+  max-width: var(--editor-max-width);
+  margin: 0 auto;
+  min-height: calc(100vh - var(--titlebar-height) - var(--statusbar-height) - 80px);
+}
+
+.editor-root .ProseMirror {
+  outline: none;
+  font-family: var(--editor-font-family, var(--font-sans));
+  font-size: var(--editor-font-size, var(--text-base));
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-primary);
+}
+
+/* ---- 标题 ---- */
+.editor-root .ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  margin-top: var(--space-10);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
+}
+
+.editor-root .ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
+  color: var(--color-text-primary);
+}
+
+.editor-root .ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-2);
+}
+
+.editor-root .ProseMirror h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-2);
+}
+
+.editor-root .ProseMirror h5,
+.editor-root .ProseMirror h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+.editor-root .ProseMirror h6 {
+  color: var(--color-text-secondary);
+}
+
+/* ---- 段落 ---- */
+.editor-root .ProseMirror p {
+  margin-bottom: var(--space-3);
+}
+
+/* ---- 行内样式 ---- */
+.editor-root .ProseMirror strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.editor-root .ProseMirror em {
+  font-style: italic;
+}
+
+.editor-root .ProseMirror del {
+  text-decoration: line-through;
+  color: var(--color-text-tertiary);
+}
+
+.editor-root .ProseMirror code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-primary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-subtle);
+}
+
+/* ---- 链接 ---- */
+.editor-root .ProseMirror a {
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition-fast);
+}
+
+.editor-root .ProseMirror a:hover {
+  border-bottom-color: var(--color-primary);
+}
+
+/* ---- 引用块 ---- */
+.editor-root .ProseMirror blockquote {
+  margin: var(--space-4) 0;
+  padding: var(--space-2) var(--space-5);
+  border-left: 3px solid var(--color-primary);
+  background-color: var(--color-primary-subtle);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  color: var(--color-text-secondary);
+}
+
+.editor-root .ProseMirror blockquote p {
+  margin-bottom: var(--space-1);
+}
+
+/* ---- 列表 ---- */
+.editor-root .ProseMirror ul,
+.editor-root .ProseMirror ol {
+  padding-left: var(--space-4);
+  margin-bottom: var(--space-4);
+  list-style: none; /* 移除默认圆点，由 Crepe 或自定义机制提供 */
+}
+
+.editor-root .ProseMirror li {
+  margin-bottom: var(--space-1);
+}
+
+.editor-root .ProseMirror li > p {
+  margin-bottom: var(--space-1);
+}
+
+/* ---- 代码块 ---- */
+.editor-root .ProseMirror pre {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  overflow-x: auto;
+}
+
+.editor-root .ProseMirror pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* ---- 分割线 ---- */
+.editor-root .ProseMirror hr {
+  border: none;
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-8) 0;
+}
+
+/* ---- 表格 ---- */
+.editor-root .ProseMirror table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: var(--space-4) 0;
+  font-size: var(--text-sm);
+}
+
+.editor-root .ProseMirror th,
+.editor-root .ProseMirror td {
+  border: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+}
+
+.editor-root .ProseMirror th {
+  background-color: var(--color-bg-tertiary);
+  font-weight: 600;
+}
+
+.editor-root .ProseMirror tr:hover td {
+  background-color: var(--color-bg-hover);
+}
+
+/* ---- 图片 ---- */
+.editor-root .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  margin: var(--space-3) 0;
+}
+
+/* ---- 选中态 ---- */
+.editor-root .ProseMirror .ProseMirror-selectednode {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---- 光标闪烁 ---- */
+.editor-root .ProseMirror .ProseMirror-cursor {
+  border-left: 2px solid var(--color-primary);
+}
+
+/* ---- 占位符 ---- */
+.editor-root .ProseMirror p.is-editor-empty:first-child::before {
+  content: '开始书写...';
+  color: var(--color-text-tertiary);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* ============================================
+ * 里程碑 2 — 增强组件样式
+ * ============================================ */
+
+/* ---- CodeMirror 代码块组件 ---- */
+.editor-root .milkdown-code-block {
+  position: relative;
+  margin: var(--space-4) 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: #282c34;
+}
+
+/* 代码块工具栏容器 (.tools) */
+.editor-root .milkdown-code-block .tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+}
+
+/* 语言选择按钮 */
+.editor-root .milkdown-code-block .tools .language-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px 2px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  line-height: 16px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out, background-color 0.15s ease;
+}
+
+.editor-root .milkdown-code-block .tools .language-button:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 展开箭头图标 */
+.editor-root .milkdown-code-block .tools .language-button .expand-icon {
+  transition: transform 0.2s ease-in-out;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.editor-root .milkdown-code-block .tools .language-button .expand-icon svg {
+  width: 14px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.editor-root .milkdown-code-block .tools .language-button[data-expanded='true'] .expand-icon {
+  transform: rotate(180deg);
+}
+
+/* 操作按钮组（复制 / 预览） */
+.editor-root .milkdown-code-block .tools .tools-button-group {
+  display: flex;
+  gap: 2px;
+}
+
+.editor-root .milkdown-code-block .tools .tools-button-group button {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  padding: 4px 10px;
+  opacity: 0;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  transition: opacity 0.2s ease-in-out, background-color 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.editor-root .milkdown-code-block .tools .tools-button-group button svg {
+  width: 14px;
+  height: 14px;
+  fill: rgba(255, 255, 255, 0.5);
+}
+
+.editor-root .milkdown-code-block .tools .tools-button-group button:first-child {
+  border-top-left-radius: 100px;
+  border-bottom-left-radius: 100px;
+}
+
+.editor-root .milkdown-code-block .tools .tools-button-group button:last-child {
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
+}
+
+.editor-root .milkdown-code-block .tools .tools-button-group button:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* hover 代码块时显示工具按钮 */
+.editor-root .milkdown-code-block:hover .language-button {
+  opacity: 1;
+}
+
+.editor-root .milkdown-code-block:hover .tools-button-group > button {
+  opacity: 1;
+}
+
+/* 语言列表弹窗 */
+.editor-root .milkdown-code-block .list-wrapper {
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  width: 240px;
+  padding-top: 12px;
+  border: 1px solid var(--color-border);
+}
+
+.editor-root .milkdown-code-block .language-list {
+  height: 410px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: 0;
+}
+
+.editor-root .milkdown-code-block .language-list-item {
+  cursor: pointer;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--color-text-primary);
+}
+
+.editor-root .milkdown-code-block .language-list-item:hover {
+  background: var(--color-bg-hover);
+}
+
+.editor-root .milkdown-code-block .language-list-item .leading,
+.editor-root .milkdown-code-block .language-list-item .leading svg {
+  width: 24px;
+  height: 24px;
+}
+
+.editor-root .milkdown-code-block .language-list-item.no-result {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* 搜索框 */
+.editor-root .milkdown-code-block .search-box {
+  display: flex;
+  align-items: center;
+  margin: 0 12px 8px;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  outline: 1px solid var(--color-primary);
+  gap: 8px;
+  padding: 6px 10px;
+}
+
+.editor-root .milkdown-code-block .search-box:has(input:focus) {
+  outline: 2px solid var(--color-primary);
+}
+
+.editor-root .milkdown-code-block .search-box .search-input {
+  width: 100%;
+  color: var(--color-text-primary);
+}
+
+.editor-root .milkdown-code-block .search-box .search-icon {
+  display: none;
+}
+
+.editor-root .milkdown-code-block .search-box .clear-icon {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+.editor-root .milkdown-code-block .search-box .clear-icon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-primary);
+  fill: var(--color-primary);
+}
+
+.editor-root .milkdown-code-block .search-box input {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  background: transparent;
+  border: none;
+}
+
+.editor-root .milkdown-code-block .search-box input:focus {
+  outline: none;
+}
+
+/* CodeMirror 编辑器容器 */
+.editor-root .cm-editor {
+  font-family: var(--font-mono) !important;
+  font-size: var(--text-sm) !important;
+  line-height: var(--leading-normal) !important;
+  background: transparent !important;
+}
+
+.editor-root .cm-editor .cm-content {
+  padding: var(--space-3) var(--space-4);
+}
+
+.editor-root .cm-editor .cm-gutters {
+  background-color: transparent;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.25);
+  font-size: var(--text-xs);
+}
+
+.editor-root .cm-editor .cm-activeLineGutter {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.editor-root .cm-editor .cm-activeLine {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.editor-root .cm-editor.cm-focused {
+  outline: none;
+}
+
+/* ---- 数学公式 (KaTeX) ---- */
+.editor-root .ProseMirror .math-inline {
+  display: inline;
+  cursor: pointer;
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+.editor-root .ProseMirror .math-inline:hover {
+  background-color: var(--color-primary-subtle);
+}
+
+.editor-root .ProseMirror .math-inline .katex {
+  font-size: 1em;
+}
+
+.editor-root .ProseMirror .math-block {
+  display: block;
+  margin: var(--space-5) 0;
+  padding: var(--space-4);
+  text-align: center;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  overflow-x: auto;
+}
+
+.editor-root .ProseMirror .math-block:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-subtle);
+}
+
+.editor-root .ProseMirror .math-block .katex-display {
+  margin: 0;
+}
+
+/* 数学公式编辑态输入框 */
+.editor-root .ProseMirror .math-inline.ProseMirror-selectednode,
+.editor-root .ProseMirror .math-block.ProseMirror-selectednode {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* KaTeX 暗色主题适配 */
+[data-theme="dark"] .editor-root .katex {
+  color: var(--color-text-primary);
+}
+
+/* ---- 表格组件增强 (Milkdown tableBlock) ---- */
+.editor-root .milkdown-table-block {
+  display: block;
+  margin: var(--space-4) 0;
+  overflow-x: auto;
+  position: relative;
+}
+
+.editor-root .milkdown-table-block table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.editor-root .milkdown-table-block th,
+.editor-root .milkdown-table-block td {
+  border: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-3);
+  min-width: 80px;
+  position: relative;
+}
+
+.editor-root .milkdown-table-block th {
+  background-color: var(--color-bg-tertiary);
+  font-weight: 600;
+}
+
+/* ProseMirror 表格选中态 */
+.editor-root .milkdown-table-block .selectedCell::after {
+  background-color: var(--color-primary-subtle);
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 拖拽预览 */
+.editor-root .milkdown-table-block .drag-preview {
+  background-color: var(--color-bg-secondary);
+  opacity: 0.4;
+  position: absolute;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  outline: 1px solid var(--color-primary);
+  outline-offset: -1px;
+}
+
+.editor-root .milkdown-table-block .drag-preview[data-show='false'] {
+  display: none;
+}
+
+/* 操作手柄基础 */
+.editor-root .milkdown-table-block .handle {
+  position: absolute;
+  font-size: 14px;
+  transition: opacity ease-in-out 0.2s;
+}
+
+.editor-root .milkdown-table-block .handle[data-show='false'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 单元格拖拽手柄 */
+.editor-root .milkdown-table-block .cell-handle {
+  z-index: 50;
+  left: -999px;
+  top: -999px;
+  cursor: grab;
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-tertiary);
+  border-radius: 100px;
+  box-shadow: var(--shadow-md);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.editor-root .milkdown-table-block .cell-handle:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.editor-root .milkdown-table-block .cell-handle[data-role='col-drag-handle'] {
+  transform: translateY(50%);
+  padding: 0 6px;
+  width: 28px;
+  height: 16px;
+}
+
+.editor-root .milkdown-table-block .cell-handle[data-role='row-drag-handle'] {
+  transform: translateX(50%);
+  padding: 6px 0;
+  width: 16px;
+  height: 28px;
+}
+
+/* 操作按钮弹出组 */
+.editor-root .milkdown-table-block .cell-handle .button-group {
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
+  top: -52px;
+  display: flex;
+  background-color: var(--color-bg-elevated);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.editor-root .milkdown-table-block .cell-handle .button-group::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  height: 8px;
+  background-color: transparent;
+  width: 100%;
+}
+
+.editor-root .milkdown-table-block .cell-handle .button-group[data-show='false'] {
+  display: none;
+}
+
+.editor-root .milkdown-table-block .cell-handle .button-group button {
+  cursor: pointer;
+  margin: 6px;
+  padding: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radius-sm);
+}
+
+.editor-root .milkdown-table-block .cell-handle .button-group button svg {
+  width: 24px;
+  height: 24px;
+}
+
+.editor-root .milkdown-table-block .cell-handle .button-group button:hover {
+  background-color: var(--color-bg-hover);
+}
+
+/* 行/列线条手柄 */
+.editor-root .milkdown-table-block .line-handle {
+  z-index: 20;
+  background-color: var(--color-primary);
+}
+
+.editor-root .milkdown-table-block .line-handle:hover {
+  opacity: 1;
+}
+
+.editor-root .milkdown-table-block .line-handle .add-button {
+  cursor: pointer;
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-tertiary);
+  border-radius: 100px;
+  box-shadow: var(--shadow-md);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.editor-root .milkdown-table-block .line-handle .add-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.editor-root .milkdown-table-block .line-handle .add-button:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.editor-root .milkdown-table-block .line-handle[data-role='x-line-drag-handle'] {
+  height: 1px;
+  z-index: 2;
+}
+
+.editor-root .milkdown-table-block .line-handle[data-role='x-line-drag-handle'] .add-button {
+  position: absolute;
+  transform: translateX(-50%) translateY(-50%);
+  padding: 6px 0;
+  width: 16px;
+  height: 28px;
+}
+
+.editor-root .milkdown-table-block .line-handle[data-role='y-line-drag-handle'] {
+  width: 1px;
+  z-index: 1;
+}
+
+.editor-root .milkdown-table-block .line-handle[data-role='y-line-drag-handle'] .add-button {
+  position: absolute;
+  transform: translateY(-50%) translateX(-50%);
+  padding: 0 6px;
+  width: 28px;
+  height: 16px;
+}
+
+.editor-root .milkdown-table-block .line-handle[data-display-type='indicator'] .add-button {
+  display: none;
+}
+
+/* 表格 SVG 图标颜色 */
+.editor-root .milkdown-table-block svg {
+  fill: var(--color-text-tertiary);
+}
+
+/* ---- 链接提示浮层 ---- */
+.milkdown-link-tooltip,
+.milkdown-link-edit-tooltip {
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  z-index: 100;
+}
+
+.milkdown-link-tooltip a {
+  color: var(--color-primary);
+  text-decoration: none;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.milkdown-link-tooltip a:hover {
+  text-decoration: underline;
+}
+
+.milkdown-link-tooltip button,
+.milkdown-link-edit-tooltip button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.milkdown-link-tooltip button:hover,
+.milkdown-link-edit-tooltip button:hover {
+  background-color: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+/* 链接编辑输入框 */
+.milkdown-link-edit-tooltip input {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  outline: none;
+  width: 250px;
+}
+
+.milkdown-link-edit-tooltip input:focus {
+  border-color: var(--color-primary);
+}
+
+/* ---- 图片块组件 ---- */
+.editor-root .milkdown-image-block {
+  margin: var(--space-4) 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.editor-root .milkdown-image-block img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+}
+
+.editor-root .milkdown-image-block .image-caption {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  padding: var(--space-2);
+}
+
+/* ---- 列表项组件 ---- */
+/* ---- 列表项组件 (Milkdown listItemBlock) ---- */
+.editor-root .milkdown-list-item-block {
+  display: block;
+  position: relative;
+  margin: var(--space-2) 0;
+}
+
+.editor-root .milkdown-list-item-block > .list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+/* 移除该结构下残留的伪元素圆点 */
+.editor-root .milkdown-list-item-block > .list-item::before {
+  content: none !important;
+}
+
+/* 任务前置图标/复选框区域 */
+.editor-root .milkdown-list-item-block .label-wrapper {
+  color: var(--color-primary);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 2px;
+  width: 24px;
+}
+
+.editor-root .milkdown-list-item-block .label-wrapper svg {
+  fill: currentColor;
+  width: 18px;
+  height: 18px;
+}
+
+.editor-root .milkdown-list-item-block .label-wrapper .checked,
+.editor-root .milkdown-list-item-block .label-wrapper .unchecked {
+  cursor: pointer;
+}
+
+/* 列表内容区域 */
+.editor-root .milkdown-list-item-block > .list-item > .children {
+  flex: 1;
+  min-width: 0;
+  color: var(--color-text-primary);
+  transition: opacity var(--transition-fast), color var(--transition-fast);
+}
+
+.editor-root .milkdown-list-item-block > .list-item > .children > p {
+  margin: 0;
+}
+
+/* 任务列表：已完成状态视觉反馈 */
+.editor-root .milkdown-list-item-block:has(.label-wrapper .checked) > .list-item > .children,
+.editor-root .milkdown-list-item-block[data-checked="true"] > .list-item > .children {
+  opacity: 0.5;
+  text-decoration: line-through;
+  color: var(--color-text-tertiary);
+}
+
+/* 拖拽手柄 */
+.editor-root .milkdown-list-item-block .list-item-handle {
+  position: absolute;
+  left: -28px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  opacity: 0;
+  cursor: grab;
+  transition: opacity var(--transition-fast);
+  color: var(--color-text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-root .milkdown-list-item-block .list-item-handle svg {
+  width: 14px;
+  height: 14px;
+}
+
+.editor-root .milkdown-list-item-block:hover > .list-item-handle {
+  opacity: 0.6;
+}
+
+.editor-root .milkdown-list-item-block:hover > .list-item-handle:hover {
+  opacity: 1;
+}
