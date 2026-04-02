@@ -27,8 +27,8 @@
         v-for="item in filteredOutline"
         :key="item.id"
         class="outline-item"
-        :class="`level-${item.level}`"
-        :style="{ paddingLeft: `${(item.level - 1) * 12 + 12}px` }"
+        :class="[`level-${item.level}`, { active: activeIndex === item.originalIndex }]"
+        :style="{ paddingLeft: `${(item.level - 1) * 14 + 14}px` }"
         @click="scrollToHeading(item.originalIndex)"
       >
         {{ item.text }}
@@ -38,13 +38,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useEditorStore } from '../../stores/editor'
 
 const editorStore = useEditorStore()
 const searchQuery = ref('')
 const showSearch = ref(false)
 const searchInputRef = ref<HTMLInputElement | null>(null)
+const activeIndex = ref(-1)
 
 function openSearch() {
   showSearch.value = true
@@ -104,12 +105,43 @@ watch(
 )
 
 function scrollToHeading(index: number) {
+  activeIndex.value = index
   const headings = document.querySelectorAll('.ProseMirror h1, .ProseMirror h2, .ProseMirror h3, .ProseMirror h4, .ProseMirror h5, .ProseMirror h6')
   if (headings && headings.length > index) {
     const target = headings[index] as HTMLElement
     target.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 }
+
+function updateActiveHeading() {
+  const container = document.querySelector('.editor-root')
+  if (!container) return
+  const headings = document.querySelectorAll('.ProseMirror h1, .ProseMirror h2, .ProseMirror h3, .ProseMirror h4, .ProseMirror h5, .ProseMirror h6')
+  if (!headings.length) return
+  const containerTop = container.getBoundingClientRect().top
+  let current = -1
+  for (let i = 0; i < headings.length; i++) {
+    const rect = headings[i].getBoundingClientRect()
+    if (rect.top - containerTop <= 20) {
+      current = i
+    } else {
+      break
+    }
+  }
+  activeIndex.value = current
+}
+
+let scrollEl: Element | null = null
+
+onMounted(() => {
+  scrollEl = document.querySelector('.editor-root')
+  scrollEl?.addEventListener('scroll', updateActiveHeading, { passive: true })
+  updateActiveHeading()
+})
+
+onUnmounted(() => {
+  scrollEl?.removeEventListener('scroll', updateActiveHeading)
+})
 </script>
 
 <style scoped>
@@ -183,7 +215,7 @@ function scrollToHeading(index: number) {
 .outline-list {
   flex: 1;
   overflow-y: auto;
-  padding: 4px 0;
+  padding: 6px 0;
 }
 
 .empty-state {
@@ -194,30 +226,23 @@ function scrollToHeading(index: number) {
 }
 
 .outline-item {
-  padding: 3px 10px;
-  font-size: 14px;
-  color: var(--color-text-secondary);
+  padding: 4px 14px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #555;
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: all var(--transition-fast);
-  border-left: 2px solid transparent;
+  transition: background-color var(--transition-fast);
 }
 
 .outline-item:hover {
   background-color: var(--color-bg-hover);
-  color: var(--color-text-primary);
-  border-left-color: var(--color-border-strong);
 }
 
-.outline-item.level-1 {
-  font-weight: 500;
-  color: var(--color-text-primary);
-  margin-top: 3px;
-}
-
-.outline-item.level-2 {
-  font-weight: 500;
+.outline-item.active {
+  font-weight: 600;
+  color: #1a1a1a;
 }
 </style>
