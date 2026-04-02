@@ -10,6 +10,16 @@
         <!-- 仅在“大纲模式”显示顶部切换按钮；文件模式更贴近 Typora 的底部工具栏 -->
         <template v-if="settings.sidebarTab === 'outline'">
           <button
+            class="icon-btn"
+            @click="toggleOutlineSearch"
+            title="搜索标题"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <button
             class="tab-btn"
             @click="toggleSidebarTab('files')"
             title="文件视图"
@@ -70,7 +80,7 @@
 
       <!-- 大纲视图 -->
       <template v-else-if="settings.sidebarTab === 'outline'">
-        <OutlineList />
+        <OutlineList ref="outlineListRef" />
       </template>
     </div>
 
@@ -109,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useSettingsStore } from '../../stores/settings'
 import { useFilesStore } from '../../stores/files'
 import { useFileSystem } from '../../composables/useFileSystem'
@@ -119,6 +129,15 @@ import OutlineList from './OutlineList.vue'
 const settings = useSettingsStore()
 const files = useFilesStore()
 const { createNodeFile, createNodeDir, openFilePath } = useFileSystem()
+const outlineListRef = ref<InstanceType<typeof OutlineList> | null>(null)
+
+function toggleOutlineSearch() {
+  if (outlineListRef.value?.showSearch) {
+    outlineListRef.value.closeSearch()
+  } else {
+    outlineListRef.value?.openSearch()
+  }
+}
 
 const workspaceName = computed(() => {
   if (!files.workspacePath) return '项目'
