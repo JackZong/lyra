@@ -2,6 +2,7 @@
 // 提供文件读写等系统级功能
 
 use std::fs;
+use tauri::Emitter;
 
 /// 读取文本文件内容
 #[tauri::command]
@@ -191,6 +192,17 @@ pub fn run() {
             rename_node,
             search_in_workspace,
         ])
-        .run(tauri::generate_context!())
-        .expect("启动 Lyra 时发生错误");
+        .build(tauri::generate_context!())
+        .expect("启动 Lyra 时发生错误")
+        .run(|app, event| {
+            if let tauri::RunEvent::Opened { urls } = event {
+                for url in urls {
+                    if let Ok(path) = url.to_file_path() {
+                        if let Some(path_str) = path.to_str() {
+                            let _ = app.emit("open-file", path_str.to_string());
+                        }
+                    }
+                }
+            }
+        });
 }

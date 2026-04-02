@@ -38,6 +38,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { getCurrentWindow } from '@tauri-apps/api/window'
+import { listen } from '@tauri-apps/api/event'
 import Sidebar from './components/sidebar/Sidebar.vue'
 import EditorView from './components/editor/EditorView.vue'
 import OmniSearch from './components/common/OmniSearch.vue'
@@ -75,6 +76,13 @@ onMounted(async () => {
   // 使用 capture 阶段优先捕获全局快捷键，防止被编辑器(ProseMirror)底层阻止冒泡
   window.addEventListener('keydown', handleKeyDown, true)
   
+  // 监听系统"用此应用打开"事件
+  listen<string>('open-file', (event) => {
+    if (event.payload) {
+      openFilePath(event.payload)
+    }
+  })
+
   // 恢复状态
   await filesStore.restoreState()
   await editorStore.restoreState()
