@@ -1,0 +1,21 @@
+/* ============================================
+ * 主题: Pixyll — 极简大留白、清爽博客风格
+ * ============================================ */
+[data-editor-theme="pixyll"] {
+  --ed-bg: #ffffff;
+  --ed-text: #404040;
+  --ed-heading: #222222;
+  --ed-link: #6699cc;
+  --ed-code-bg: #f2f2f2;
+  --ed-code-text: #bf616a;
+  --ed-code-block-bg: #2b303b;
+  --ed-blockquote-border: #6699cc;
+  --ed-blockquote-bg: transparent;
+  --ed-blockquote-text: #808080;
+  --ed-hr: #e0e0e0;
+  --ed-table-border: #e0e0e0;
+  --ed-table-header-bg: #f8f8f8;
+  --ed-h1-border: transparent;
+  --ed-font: 'Merriweather', Georgia, serif;
+  --ed-heading-font: 'Lato', 'Helvetica Neue', Helvetica, sans-serif;
+}

@@ -7,7 +7,6 @@
         <template v-if="settings.sidebarTab === 'outline'">
           <button
             class="tab-btn"
-            :class="{ active: settings.sidebarTab === 'files' }"
             @click="toggleSidebarTab('files')"
             title="文件视图"
           >
@@ -16,8 +15,7 @@
             </svg>
           </button>
           <button
-            class="tab-btn"
-            :class="{ active: settings.sidebarTab === 'outline' }"
+            class="tab-btn active"
             @click="toggleSidebarTab('outline')"
             title="大纲视图"
           >
@@ -182,7 +180,7 @@ async function createQuickFolder() {
 .sidebar {
   width: 0;
   overflow: hidden;
-  background-color: #f3f3f3;
+  background-color: var(--color-bg-sidebar, var(--color-bg-secondary));
   border-right: 1px solid var(--color-border-subtle);
   transition: width var(--transition-slow);
   flex-shrink: 0;
@@ -209,7 +207,7 @@ async function createQuickFolder() {
 .sidebar-title {
   font-size: 12px;
   font-weight: 500;
-  color: #6f6f6f;
+  color: var(--color-text-secondary);
 }
 
 .sidebar-actions {
@@ -223,7 +221,7 @@ async function createQuickFolder() {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: #8f8f8f;
+  color: var(--color-text-tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -236,13 +234,13 @@ async function createQuickFolder() {
 
 .tab-btn:hover,
 .icon-btn:hover {
-  background-color: rgba(0, 0, 0, 0.06);
-  color: #4f4f4f;
+  background-color: var(--color-bg-hover);
+  color: var(--color-text-primary);
 }
 
 .tab-btn.active {
-  color: #4f4f4f;
-  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-active);
 }
 
 .sidebar-content {
@@ -262,7 +260,7 @@ async function createQuickFolder() {
 
 .workspace-label {
   font-size: 11px;
-  color: #939393;
+  color: var(--color-text-tertiary);
   font-weight: 500;
   margin: 2px 8px 4px;
   padding: 0;
@@ -314,7 +312,7 @@ async function createQuickFolder() {
   gap: 2px;
   padding: 0 6px;
   border-top: 1px solid var(--color-border-subtle);
-  background: #efefef;
+  background: var(--color-bg-tertiary);
   flex-shrink: 0;
 }
 
@@ -325,18 +323,33 @@ async function createQuickFolder() {
   align-items: center;
   justify-content: center;
   border-radius: 3px;
-  color: #888;
+  color: var(--color-text-tertiary);
 }
 
 .footer-btn:hover {
-  color: #5f5f5f;
-  background: rgba(0, 0, 0, 0.05);
+  color: var(--color-text-primary);
+  background: var(--color-bg-hover);
 }
 
 .footer-label {
   margin-left: auto;
   font-size: 10px;
-  color: #8a8a8a;
+  color: var(--color-text-tertiary);
   line-height: 1;
+}
+
+/* Night 模式强制覆盖：保证左侧菜单为暗黑底色 */
+[data-theme="dark"] .sidebar {
+  background-color: #1a1d22;
+  border-right-color: #2a2f36;
+}
+
+[data-theme="dark"] .sidebar-header {
+  background-color: #1a1d22;
+}
+
+[data-theme="dark"] .sidebar-footer {
+  background-color: #1a1d22;
+  border-top-color: #2a2f36;
 }
 </style>

@@ -12,11 +12,30 @@
 </template>
 
 <script setup lang="ts">
+import { watch } from 'vue'
 import { MilkdownProvider } from '@milkdown/vue'
 import MilkdownEditor from './MilkdownEditor.vue'
 import { useEditorStore } from '../../stores/editor'
+import { useFileSystem } from '../../composables/useFileSystem'
 
 const editorStore = useEditorStore()
+const { openFilePath } = useFileSystem()
+
+watch(
+  () => editorStore.activeTabId,
+  async () => {
+    const tab = editorStore.activeTab
+    if (!tab) return
+    if (tab.id.startsWith('new-') || tab.id === 'lyra-welcome') return
+    if (tab.content !== '') return
+    try {
+      await openFilePath(tab.id, { activate: false })
+    } catch {
+      // ignore reload failures, keep editor stable
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>

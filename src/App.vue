@@ -1,6 +1,16 @@
 <template>
   <div class="app-layout">
     <button
+      class="top-settings-btn"
+      @click="settings.toggleSettingsModal()"
+      title="设置 (Cmd+,)"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
+    <button
       v-if="!settings.sidebarOpen"
       class="sidebar-reopen-btn"
       @click="settings.toggleSidebar()"
@@ -148,13 +158,34 @@ onUnmounted(() => {
   justify-content: center;
   border: 1px solid var(--color-border-subtle);
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #7f7f7f;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
   z-index: 30;
 }
 
 .sidebar-reopen-btn:hover {
-  background: #f5f5f5;
-  color: #555;
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
+.top-settings-btn {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 4px;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  z-index: 30;
+}
+
+.top-settings-btn:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
 }
 </style>

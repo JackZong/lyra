@@ -21,6 +21,7 @@
   --color-bg-secondary: #f8f9fb;
   --color-bg-tertiary: #f1f3f5;
   --color-bg-elevated: #ffffff;
+  --color-bg-sidebar: #f3f3f3;
   --color-bg-hover: rgba(0, 0, 0, 0.04);
   --color-bg-active: rgba(0, 0, 0, 0.06);
 
@@ -93,6 +94,26 @@
   --editor-padding-x: 36px;
   --editor-padding-y: 24px;
 
+  /* ---- 编辑区主题变量 (--ed-*) ---- */
+  --ed-bg: #ffffff;
+  --ed-text: #444444;
+  --ed-heading: #2d2d2d;
+  --ed-link: #4183c4;
+  --ed-code-bg: #f6f8fa;
+  --ed-code-text: #c7254e;
+  --ed-code-block-bg: #282c34;
+  --ed-code-block-text: #e6edf3;
+  --ed-blockquote-border: #6366f1;
+  --ed-blockquote-bg: rgba(99, 102, 241, 0.06);
+  --ed-blockquote-text: #6b7280;
+  --ed-hr: #e5e7eb;
+  --ed-table-border: #e5e7eb;
+  --ed-table-header-bg: #f6f8fa;
+  --ed-h1-border: #ececec;
+  --ed-list-marker: #7d8798;
+  --ed-font: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  --ed-heading-font: inherit;
+
   /* ---- Crepe 组件变量映射 (Light) ---- */
   --crepe-color-background: var(--color-bg-primary);
   --crepe-color-on-background: var(--color-text-primary);
@@ -120,26 +141,43 @@
  * Dark 主题
  * ============================================ */
 [data-theme="dark"] {
-  --color-bg-primary: #1a1b26;
-  --color-bg-secondary: #1e1f2e;
-  --color-bg-tertiary: #24253a;
-  --color-bg-elevated: #2a2b3d;
-  --color-bg-hover: rgba(255, 255, 255, 0.06);
-  --color-bg-active: rgba(255, 255, 255, 0.08);
+  --color-bg-primary: #2f343b;
+  --color-bg-secondary: #262b31;
+  --color-bg-tertiary: #23272d;
+  --color-bg-elevated: #2a2f36;
+  --color-bg-sidebar: #1f2329;
+  --color-bg-hover: rgba(255, 255, 255, 0.05);
+  --color-bg-active: rgba(255, 255, 255, 0.09);
 
-  --color-border: #2e3048;
-  --color-border-subtle: #262840;
-  --color-border-strong: #3d3f58;
+  --color-border: #3b414a;
+  --color-border-subtle: #353b44;
+  --color-border-strong: #4a515c;
 
-  --color-text-primary: #e2e4f0;
-  --color-text-secondary: #8b8fa8;
-  --color-text-tertiary: #5c5f7a;
-  --color-text-disabled: #3d3f58;
+  --color-text-primary: #d7dbe2;
+  --color-text-secondary: #a7adb8;
+  --color-text-tertiary: #7f8794;
+  --color-text-disabled: #5b6270;
 
   --color-primary: #818cf8;
   --color-primary-hover: #a5b4fc;
   --color-primary-active: #6366f1;
   --color-primary-subtle: rgba(129, 140, 248, 0.1);
+  --ed-list-marker: #9aa2b3;
+  --ed-bg: #30353d;
+  --ed-text: #d1d6de;
+  --ed-heading: #e8ecf3;
+  --ed-link: #8fb2ff;
+  --ed-code-bg: #2a2f36;
+  --ed-code-text: #ffc27a;
+  --ed-code-block-bg: #1c2128;
+  --ed-code-block-text: #e6edf3;
+  --ed-blockquote-border: #7f90ff;
+  --ed-blockquote-bg: rgba(127, 144, 255, 0.12);
+  --ed-blockquote-text: #b9c1d0;
+  --ed-hr: #434a55;
+  --ed-table-border: #444b58;
+  --ed-table-header-bg: #2b3037;
+  --ed-h1-border: #474e5a;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);

@@ -9,7 +9,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: var(--editor-padding-y) var(--editor-padding-x);
-  background-color: #ffffff;
+  background-color: var(--ed-bg);
 }
 
 /* ProseMirror 编辑区域 */
@@ -21,10 +21,10 @@
 
 .editor-root .ProseMirror {
   outline: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--ed-font);
   font-size: var(--editor-font-size, 16px);
   line-height: 1.72;
-  color: #444;
+  color: var(--ed-text);
 }
 
 /* ---- 标题 ---- */
@@ -35,8 +35,8 @@
   margin-top: 16px;
   margin-bottom: 8px;
   padding-bottom: 6px;
-  border-bottom: 1px solid #ececec;
-  color: #2d2d2d;
+  border-bottom: 1px solid var(--ed-h1-border);
+  color: var(--ed-heading);
 }
 
 .editor-root .ProseMirror h2 {
@@ -45,7 +45,7 @@
   line-height: 1.4;
   margin-top: 18px;
   margin-bottom: 7px;
-  color: #303030;
+  color: var(--ed-heading);
 }
 
 .editor-root .ProseMirror h3 {
@@ -71,7 +71,7 @@
 }
 
 .editor-root .ProseMirror h6 {
-  color: #555;
+  color: var(--ed-heading);
 }
 
 /* ---- 段落 ---- */
@@ -97,8 +97,8 @@
 .editor-root .ProseMirror code {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  background-color: var(--color-bg-tertiary);
-  color: var(--color-primary);
+  background-color: var(--ed-code-bg);
+  color: var(--ed-code-text);
   padding: 2px 6px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-subtle);
@@ -106,24 +106,24 @@
 
 /* ---- 链接 ---- */
 .editor-root .ProseMirror a {
-  color: var(--color-primary);
+  color: var(--ed-link);
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: border-color var(--transition-fast);
 }
 
 .editor-root .ProseMirror a:hover {
-  border-bottom-color: var(--color-primary);
+  border-bottom-color: var(--ed-link);
 }
 
 /* ---- 引用块 ---- */
 .editor-root .ProseMirror blockquote {
   margin: var(--space-4) 0;
   padding: var(--space-2) var(--space-5);
-  border-left: 3px solid var(--color-primary);
-  background-color: var(--color-primary-subtle);
+  border-left: 3px solid var(--ed-blockquote-border);
+  background-color: var(--ed-blockquote-bg);
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  color: var(--color-text-secondary);
+  color: var(--ed-blockquote-text);
 }
 
 .editor-root .ProseMirror blockquote p {
@@ -151,8 +151,9 @@
   font-family: var(--font-mono);
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  background-color: var(--ed-code-block-bg);
+  color: var(--ed-code-block-text);
+  border: 1px solid var(--ed-table-border);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   margin: var(--space-4) 0;
@@ -171,7 +172,7 @@
 .editor-root .ProseMirror hr {
   border: none;
   height: 1px;
-  background: var(--color-border);
+  background: var(--ed-hr);
   margin: var(--space-8) 0;
 }
 
@@ -180,18 +181,18 @@
   border-collapse: collapse;
   width: 100%;
   margin: var(--space-4) 0;
-  font-size: var(--text-sm);
+  font-size: 1em;
 }
 
 .editor-root .ProseMirror th,
 .editor-root .ProseMirror td {
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--ed-table-border);
   padding: var(--space-2) var(--space-3);
   text-align: left;
 }
 
 .editor-root .ProseMirror th {
-  background-color: var(--color-bg-tertiary);
+  background-color: var(--ed-table-header-bg);
   font-weight: 600;
 }
 
@@ -237,7 +238,8 @@
   margin: var(--space-4) 0;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background-color: #282c34;
+  background-color: var(--ed-code-block-bg);
+  color: var(--ed-code-block-text);
 }
 
 /* 代码块工具栏容器 (.tools) */
@@ -453,6 +455,7 @@
 
 .editor-root .cm-editor .cm-content {
   padding: var(--space-3) var(--space-4);
+  color: var(--ed-code-block-text);
 }
 
 .editor-root .cm-editor .cm-gutters {
@@ -540,14 +543,14 @@
 
 .editor-root .milkdown-table-block th,
 .editor-root .milkdown-table-block td {
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--ed-table-border);
   padding: var(--space-2) var(--space-3);
   min-width: 80px;
   position: relative;
 }
 
 .editor-root .milkdown-table-block th {
-  background-color: var(--color-bg-tertiary);
+  background-color: var(--ed-table-header-bg);
   font-weight: 600;
 }
 
@@ -834,7 +837,7 @@
 
 /* 任务前置图标/复选框区域 */
 .editor-root .milkdown-list-item-block .label-wrapper {
-  color: var(--color-primary);
+  color: var(--ed-list-marker, var(--color-text-tertiary));
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -844,6 +847,7 @@
 
 .editor-root .milkdown-list-item-block .label-wrapper svg {
   fill: currentColor;
+  stroke: currentColor;
   width: 18px;
   height: 18px;
 }
@@ -857,7 +861,7 @@
 .editor-root .milkdown-list-item-block > .list-item > .children {
   flex: 1;
   min-width: 0;
-  color: var(--color-text-primary);
+  color: var(--ed-text);
   transition: opacity var(--transition-fast), color var(--transition-fast);
 }
 
@@ -868,9 +872,40 @@
 /* 任务列表：已完成状态视觉反馈 */
 .editor-root .milkdown-list-item-block:has(.label-wrapper .checked) > .list-item > .children,
 .editor-root .milkdown-list-item-block[data-checked="true"] > .list-item > .children {
-  opacity: 0.5;
+  opacity: 0.72;
   text-decoration: line-through;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
+}
+
+/* Dark 模式下，兼容原始 Markdown 中写死的内联颜色，避免出现“深色底 + 深色字”不可读 */
+[data-theme="dark"] .editor-root .ProseMirror :is(p, li, blockquote, td, th) [style*="color"] {
+  color: inherit !important;
+}
+
+[data-theme="dark"] .editor-root .ProseMirror :is(p, li, blockquote, td, th) [style*="background"] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+[data-theme="dark"] .editor-root .ProseMirror :is(p, li, blockquote, td, th) {
+  color: var(--ed-text);
+}
+
+[data-theme="dark"] .editor-root .ProseMirror :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--ed-heading);
+}
+
+/* 针对夜间模式下偶发的“深色块 + 深色字”片段，统一回退到正文可读色 */
+[data-theme="dark"] .editor-root .ProseMirror :is(p, li, blockquote, td, th) :is(span, strong, b, em, i) {
+  color: inherit !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* 但保留行内 code 的深色语义样式 */
+[data-theme="dark"] .editor-root .ProseMirror :is(p, li, blockquote, td, th) code {
+  color: var(--ed-code-text) !important;
+  background-color: var(--ed-code-bg) !important;
 }
 
 /* 拖拽手柄 */

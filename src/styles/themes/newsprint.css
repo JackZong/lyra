@@ -1,0 +1,21 @@
+/* ============================================
+ * 主题: Newsprint — 报纸版面、紧凑布局
+ * ============================================ */
+[data-editor-theme="newsprint"] {
+  --ed-bg: #f5f5f0;
+  --ed-text: #2c2c2c;
+  --ed-heading: #121212;
+  --ed-link: #aa5500;
+  --ed-code-bg: #eaeae4;
+  --ed-code-text: #a31515;
+  --ed-code-block-bg: #1e1e1e;
+  --ed-blockquote-border: #999999;
+  --ed-blockquote-bg: rgba(0, 0, 0, 0.03);
+  --ed-blockquote-text: #555555;
+  --ed-hr: #cccccc;
+  --ed-table-border: #cccccc;
+  --ed-table-header-bg: #eaeae4;
+  --ed-h1-border: #cccccc;
+  --ed-font: 'Merriweather', 'PT Serif', Georgia, serif;
+  --ed-heading-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}

@@ -17,8 +17,8 @@
           
           <div class="setting-item">
             <div class="setting-desc">
-              <strong>颜色主题</strong>
-              <p>切换明亮或暗黑模式</p>
+              <strong>颜色主题 </strong>
+              <p>影响外壳边框及底色：明亮、暗黑或跟随系统</p>
             </div>
             <div class="setting-control">
               <select v-model="settings.themeMode">
@@ -26,6 +26,31 @@
                 <option value="light">始终明亮</option>
                 <option value="dark">始终暗黑</option>
               </select>
+            </div>
+          </div>
+
+          <div class="setting-item theme-grid-item">
+            <div class="setting-desc">
+              <strong>编辑区主题 (Theme)</strong>
+              <p>改变正文的排版风格、字体及高亮配色</p>
+            </div>
+            <div class="theme-grid">
+              <div 
+                v-for="theme in EDITOR_THEMES" 
+                :key="theme.id"
+                class="theme-card"
+                :class="{ active: settings.editorTheme === theme.id }"
+                @click="settings.setEditorTheme(theme.id)"
+              >
+                <div class="theme-preview" :style="{ backgroundColor: theme.preview.bg, borderColor: theme.preview.bg === '#ffffff' ? '#e5e7eb' : theme.preview.bg }">
+                  <div class="preview-text" :style="{ color: theme.preview.text }">Aa</div>
+                  <div class="preview-accent" :style="{ backgroundColor: theme.preview.accent }"></div>
+                </div>
+                <div class="theme-info">
+                  <span class="theme-name">{{ theme.label }}</span>
+                  <span class="theme-desc">{{ theme.description }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -70,7 +95,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
-import { useSettingsStore } from '../../stores/settings'
+import { useSettingsStore, EDITOR_THEMES } from '../../stores/settings'
 
 const settings = useSettingsStore()
 
@@ -200,5 +225,83 @@ onUnmounted(() => {
 .setting-control input[type="range"] {
   cursor: pointer;
   accent-color: var(--color-primary);
+}
+
+/* 主题选择网格 */
+.theme-grid-item {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.theme-card {
+  border: 2px solid transparent;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background-color: var(--color-bg-secondary);
+  overflow: hidden;
+}
+
+.theme-card:hover {
+  background-color: var(--color-bg-tertiary);
+  transform: translateY(-2px);
+}
+
+.theme-card.active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-subtle);
+}
+
+.theme-preview {
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.preview-text {
+  font-size: 24px;
+  font-family: serif;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.preview-accent {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.theme-info {
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.theme-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.theme-desc {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
 }
 </style>

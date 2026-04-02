@@ -1,0 +1,21 @@
+/* ============================================
+ * 主题: Night — 暗色背景、柔和对比
+ * ============================================ */
+[data-editor-theme="night"] {
+  --ed-bg: #1e1e1e;
+  --ed-text: #c8c8c8;
+  --ed-heading: #e8e8e8;
+  --ed-link: #6db3f2;
+  --ed-code-bg: #2d2d2d;
+  --ed-code-text: #f08d49;
+  --ed-code-block-bg: #161616;
+  --ed-blockquote-border: #505050;
+  --ed-blockquote-bg: rgba(255, 255, 255, 0.03);
+  --ed-blockquote-text: #999999;
+  --ed-hr: #393939;
+  --ed-table-border: #393939;
+  --ed-table-header-bg: #2a2a2a;
+  --ed-h1-border: #393939;
+  --ed-font: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  --ed-heading-font: inherit;
+}

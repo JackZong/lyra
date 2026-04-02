@@ -1,13 +1,13 @@
 {
   "name": "lyra",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "CI=true tauri"
   },
   "dependencies": {
     "@codemirror/commands": "^6.10.3",

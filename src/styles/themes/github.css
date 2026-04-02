@@ -1,0 +1,116 @@
+/* ============================================
+ * 主题: Github — 干净素雅、GitHub README 风格
+ * ============================================ */
+[data-editor-theme="github"] {
+  --ed-bg: #ffffff;
+  --ed-text: #2f353d;
+  --ed-heading: #1f2328;
+  --ed-link: #4183c4;
+  --ed-code-bg: #f3f4f4;
+  --ed-code-text: #c7254e;
+  --ed-code-block-bg: #f7f7f7;
+  --ed-code-block-text: #383a42;
+  --ed-blockquote-border: #dfe2e5;
+  --ed-blockquote-bg: transparent;
+  --ed-blockquote-text: #6a737d;
+  --ed-hr: #e1e4e8;
+  --ed-table-border: #dfe2e5;
+  --ed-table-header-bg: #f6f8fa;
+  --ed-h1-border: #eaecef;
+  --ed-list-marker: #7c8794;
+  --ed-font: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --ed-heading-font: inherit;
+}
+
+/* Typora Github 模式细节：更紧凑且更柔和 */
+[data-editor-theme="github"] .editor-root .ProseMirror {
+  font-size: 16px;
+  line-height: 1.66;
+}
+
+[data-editor-theme="github"] .editor-root .ProseMirror h1 {
+  font-size: 30px;
+  margin-top: 14px;
+  margin-bottom: 8px;
+}
+
+[data-editor-theme="github"] .editor-root .ProseMirror h2 {
+  font-size: 24px;
+  margin-top: 16px;
+  margin-bottom: 7px;
+}
+
+[data-editor-theme="github"] .editor-root .ProseMirror p {
+  margin-bottom: 10px;
+}
+
+[data-editor-theme="github"] .editor-root .ProseMirror a {
+  color: var(--ed-link);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(65, 131, 196, 0.28);
+}
+
+[data-editor-theme="github"] .editor-root .ProseMirror a:hover {
+  border-bottom-color: rgba(65, 131, 196, 0.72);
+}
+
+[data-editor-theme="github"] .editor-root .ProseMirror code {
+  border-color: #e6e8ea;
+  border-radius: 4px;
+}
+
+[data-editor-theme="github"] .editor-root .ProseMirror pre {
+  border-color: #e6e8ea;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+[data-editor-theme="github"] .editor-root .milkdown-code-block .tools {
+  border-bottom: 1px solid #e6e8ea;
+  background: #f2f3f5;
+}
+
+[data-editor-theme="github"] .editor-root .milkdown-code-block .tools .language-button {
+  background: #e9ecf0;
+  color: #5f6b7a;
+}
+
+[data-editor-theme="github"] .editor-root .milkdown-code-block .tools .tools-button-group button {
+  background: #e9ecf0;
+  color: #5f6b7a;
+}
+
+[data-editor-theme="github"] .editor-root .milkdown-code-block .tools .tools-button-group button:hover,
+[data-editor-theme="github"] .editor-root .milkdown-code-block .tools .language-button:hover {
+  background: #dde2e8;
+  color: #3d4652;
+}
+
+/* 参考用户示例图：Github 模式表格样式 */
+[data-editor-theme="github"] .editor-root .ProseMirror table {
+  border-collapse: collapse;
+  border: 1px solid #d8dee4;
+  background: #ffffff;
+}
+
+[data-editor-theme="github"] .editor-root .ProseMirror th,
+[data-editor-theme="github"] .editor-root .ProseMirror td {
+  border: 1px solid #d8dee4;
+  padding: 10px 14px;
+  color: #3c434d;
+  vertical-align: middle;
+}
+
+[data-editor-theme="github"] .editor-root .ProseMirror th {
+  background: #f3f4f6;
+  color: #2f353d;
+  font-weight: 600;
+}
+
+[data-editor-theme="github"] .editor-root .ProseMirror tbody tr {
+  background: #ffffff;
+}
+
+[data-editor-theme="github"] .editor-root .ProseMirror tr:hover td {
+  background: #ffffff;
+}

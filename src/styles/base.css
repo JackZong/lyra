@@ -102,3 +102,20 @@ button {
 .icon-btn:active {
   background-color: var(--color-bg-active);
 }
+
+/* Night 模式全局兜底：确保左侧菜单区域始终为暗底 */
+[data-theme="dark"] .sidebar {
+  background-color: var(--color-bg-sidebar) !important;
+  border-right-color: var(--color-border-subtle) !important;
+}
+
+[data-theme="dark"] .sidebar-header,
+[data-theme="dark"] .sidebar-footer {
+  background-color: var(--color-bg-sidebar) !important;
+}
+
+[data-theme="dark"] .sidebar-content,
+[data-theme="dark"] .file-tree-container,
+[data-theme="dark"] .outline-content {
+  background-color: var(--color-bg-sidebar) !important;
+}

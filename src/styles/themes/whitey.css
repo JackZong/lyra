@@ -1,0 +1,21 @@
+/* ============================================
+ * 主题: Whitey — 纯白灰调、无彩色极简
+ * ============================================ */
+[data-editor-theme="whitey"] {
+  --ed-bg: #ffffff;
+  --ed-text: #555555;
+  --ed-heading: #333333;
+  --ed-link: #777777;
+  --ed-code-bg: #f5f5f5;
+  --ed-code-text: #666666;
+  --ed-code-block-bg: #2f2f2f;
+  --ed-blockquote-border: #cccccc;
+  --ed-blockquote-bg: #fafafa;
+  --ed-blockquote-text: #888888;
+  --ed-hr: #e8e8e8;
+  --ed-table-border: #e8e8e8;
+  --ed-table-header-bg: #fafafa;
+  --ed-h1-border: #e8e8e8;
+  --ed-font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  --ed-heading-font: inherit;
+}

@@ -90,7 +90,7 @@ function scrollToHeading(index: number) {
 .outline-item {
   padding: 3px 10px;
   font-size: 12px;
-  color: #656565;
+  color: var(--color-text-secondary);
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
@@ -100,14 +100,14 @@ function scrollToHeading(index: number) {
 }
 
 .outline-item:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-  color: #2f2f2f;
-  border-left-color: #9c9c9c;
+  background-color: var(--color-bg-hover);
+  color: var(--color-text-primary);
+  border-left-color: var(--color-border-strong);
 }
 
 .outline-item.level-1 {
   font-weight: 500;
-  color: #3f3f3f;
+  color: var(--color-text-primary);
   margin-top: 3px;
 }
 

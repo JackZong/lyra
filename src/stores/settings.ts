@@ -1,6 +1,27 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 
+/** 可选的编辑区主题标识 */
+export type EditorThemeName = 'github' | 'gothic' | 'newsprint' | 'night' | 'pixyll' | 'whitey'
+
+/** 主题元数据，供 UI 展示 */
+export interface ThemeMeta {
+  id: EditorThemeName
+  label: string
+  description: string
+  /** 色块预览：背景色 + 文字色 */
+  preview: { bg: string; text: string; accent: string }
+}
+
+export const EDITOR_THEMES: ThemeMeta[] = [
+  { id: 'github',    label: 'Github',    description: '干净素雅',   preview: { bg: '#ffffff', text: '#24292e', accent: '#0366d6' } },
+  { id: 'gothic',    label: 'Gothic',    description: '衬线经典',   preview: { bg: '#faf8f5', text: '#3d3929', accent: '#8b4513' } },
+  { id: 'newsprint', label: 'Newsprint', description: '报纸版面',   preview: { bg: '#f5f5f0', text: '#2c2c2c', accent: '#aa5500' } },
+  { id: 'night',     label: 'Night',     description: '暗夜护眼',   preview: { bg: '#1e1e1e', text: '#c8c8c8', accent: '#6db3f2' } },
+  { id: 'pixyll',    label: 'Pixyll',    description: '极简留白',   preview: { bg: '#ffffff', text: '#404040', accent: '#6699cc' } },
+  { id: 'whitey',    label: 'Whitey',    description: '纯白灰调',   preview: { bg: '#ffffff', text: '#555555', accent: '#777777' } },
+]
+
 /**
  * 应用设置状态管理
  * 管理主题、字体大小等全局设置
@@ -22,6 +43,9 @@ export const useSettingsStore = defineStore('settings', () => {
   const editorFontFamily = ref('system-ui, -apple-system, sans-serif')
   const editorMaxWidth = ref(800) // 0 表示 100% 满宽铺开
 
+  // 编辑区主题
+  const editorTheme = ref<EditorThemeName>('github')
+
   // 初始化加载本地设定的配置
   function loadSettings() {
     try {
@@ -34,6 +58,7 @@ export const useSettingsStore = defineStore('settings', () => {
         if (parsed.editorFontSize) editorFontSize.value = parsed.editorFontSize
         if (parsed.editorFontFamily) editorFontFamily.value = parsed.editorFontFamily
         if (parsed.editorMaxWidth !== undefined) editorMaxWidth.value = parsed.editorMaxWidth
+        if (parsed.editorTheme) editorTheme.value = parsed.editorTheme
       }
     } catch (e) {
       console.warn('加载设置失败', e)
@@ -49,7 +74,8 @@ export const useSettingsStore = defineStore('settings', () => {
         sidebarTab: sidebarTab.value,
         editorFontSize: editorFontSize.value,
         editorFontFamily: editorFontFamily.value,
-        editorMaxWidth: editorMaxWidth.value 
+        editorMaxWidth: editorMaxWidth.value,
+        editorTheme: editorTheme.value
       }))
     } catch (e) {
       console.warn('保存设置失败', e)
@@ -58,7 +84,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   // 挂载一个监听所有关键状态变化的机制
   watch(
-    () => [themeMode.value, sidebarOpen.value, sidebarTab.value, editorFontSize.value, editorFontFamily.value, editorMaxWidth.value], 
+    () => [themeMode.value, sidebarOpen.value, sidebarTab.value, editorFontSize.value, editorFontFamily.value, editorMaxWidth.value, editorTheme.value], 
     () => {
       saveSettings()
       applyTheme() // 重绘字体或环境变量
@@ -70,6 +96,9 @@ export const useSettingsStore = defineStore('settings', () => {
    * 获取实际生效的主题
    */
   function getEffectiveTheme(): 'light' | 'dark' {
+    // 编辑区选择 Night 主题时，壳层 UI 也跟随暗色，避免出现“正文暗色 + 侧栏亮色”割裂。
+    if (editorTheme.value === 'night') return 'dark'
+
     if (themeMode.value === 'system') {
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     }
@@ -85,6 +114,15 @@ export const useSettingsStore = defineStore('settings', () => {
     document.documentElement.style.setProperty('--editor-font-size', `${editorFontSize.value}px`)
     document.documentElement.style.setProperty('--editor-font-family', editorFontFamily.value)
     document.documentElement.style.setProperty('--editor-max-width', editorMaxWidth.value === 0 ? '100%' : `${editorMaxWidth.value}px`)
+    // 应用编辑区主题
+    document.body.setAttribute('data-editor-theme', editorTheme.value)
+  }
+
+  /**
+   * 切换编辑区主题
+   */
+  function setEditorTheme(name: EditorThemeName) {
+    editorTheme.value = name
   }
 
   // 执行一次初始化加载
@@ -152,12 +190,14 @@ export const useSettingsStore = defineStore('settings', () => {
     editorFontSize,
     editorFontFamily,
     editorMaxWidth,
+    editorTheme,
     getEffectiveTheme,
     applyTheme,
     toggleTheme,
     toggleSidebar,
     setSidebarTab,
     toggleOmniSearch,
-    toggleSettingsModal
+    toggleSettingsModal,
+    setEditorTheme
   }
 })

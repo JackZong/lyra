@@ -1,0 +1,21 @@
+/* ============================================
+ * 主题: Gothic — 衬线经典、传统排版风格
+ * ============================================ */
+[data-editor-theme="gothic"] {
+  --ed-bg: #faf8f5;
+  --ed-text: #3d3929;
+  --ed-heading: #1a1611;
+  --ed-link: #8b4513;
+  --ed-code-bg: #f0ece4;
+  --ed-code-text: #8b4513;
+  --ed-code-block-bg: #2b2520;
+  --ed-blockquote-border: #b8a88a;
+  --ed-blockquote-bg: rgba(184, 168, 138, 0.08);
+  --ed-blockquote-text: #6b5e47;
+  --ed-hr: #d5cbb8;
+  --ed-table-border: #d5cbb8;
+  --ed-table-header-bg: #f0ece4;
+  --ed-h1-border: #d5cbb8;
+  --ed-font: 'Georgia', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  --ed-heading-font: 'Georgia', serif;
+}

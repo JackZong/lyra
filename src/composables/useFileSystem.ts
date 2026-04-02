@@ -26,6 +26,22 @@ export function useFileSystem() {
   }
 
   /**
+   * 清理富文本导入遗留的行内样式（color/background 等），
+   * 避免在亮/暗主题下出现“黑底黑字”或“白底白字”不可读问题。
+   */
+  function sanitizeInlineHtmlStyles(markdown: string): string {
+    return markdown
+      // 移除 style="..." / style='...'
+      .replace(/\sstyle\s*=\s*"[^"]*"/gi, '')
+      .replace(/\sstyle\s*=\s*'[^']*'/gi, '')
+      // 移除 color / bgcolor 等内联属性
+      .replace(/\s(?:color|bgcolor)\s*=\s*"[^"]*"/gi, '')
+      .replace(/\s(?:color|bgcolor)\s*=\s*'[^']*'/gi, '')
+      // 简单清理 font 标签，仅保留文本内容
+      .replace(/<\/?font\b[^>]*>/gi, '')
+  }
+
+  /**
    * 自动防抖保存的定时器
    */
   let autoSaveTimer: ReturnType<typeof setTimeout> | null = null
@@ -73,7 +89,7 @@ export function useFileSystem() {
     try {
       editorStore.isLoading = true
       const rawContent = await invoke<string>('read_file', { path })
-      const content = normalizeImageTags(rawContent)
+      const content = sanitizeInlineHtmlStyles(normalizeImageTags(rawContent))
       const fileName = path.split(/[\/\\]/).pop() || '未命名'
       editorStore.openTab(path, fileName, content, options?.activate ?? true)
       return path

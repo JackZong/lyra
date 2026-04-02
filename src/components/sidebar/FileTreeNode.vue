@@ -161,7 +161,7 @@ function handleRightClick(e: MouseEvent) {
   cursor: pointer;
   border-radius: 0;
   user-select: none;
-  color: #626262;
+  color: var(--color-text-secondary);
   font-size: 12px;
   transition: background-color var(--transition-fast), color var(--transition-fast);
   margin-bottom: 0;
@@ -169,13 +169,13 @@ function handleRightClick(e: MouseEvent) {
 }
 
 .node-row:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-  color: #2f2f2f;
+  background-color: var(--color-bg-hover);
+  color: var(--color-text-primary);
 }
 
 .node-row.is-active {
-  background-color: rgba(0, 0, 0, 0.08);
-  color: #1f1f1f;
+  background-color: var(--color-bg-active);
+  color: var(--color-text-primary);
 }
 
 .chevron {
