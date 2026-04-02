@@ -180,43 +180,43 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
-.sidebar-reopen-btn {
-  position: absolute;
-  top: 6px;
-  left: 8px;
-  width: 24px;
-  height: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 4px;
-  background: var(--color-bg-elevated);
-  color: var(--color-text-secondary);
-  z-index: 30;
-}
-
-.sidebar-reopen-btn:hover {
-  background: var(--color-bg-hover);
-  color: var(--color-text-primary);
-}
-
-.top-settings-btn {
+.top-right-btns {
   position: absolute;
   top: 6px;
   right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 30;
+}
+
+.top-toggle-sidebar-btn,
+.top-settings-btn {
+  position: absolute;
+  top: 6px;
   width: 24px;
   height: 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--color-border-subtle);
+  border: none;
   border-radius: 4px;
-  background: var(--color-bg-elevated);
-  color: var(--color-text-secondary);
+  background: transparent;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
   z-index: 30;
+  transition: all 0.12s ease;
 }
 
+.top-toggle-sidebar-btn {
+  right: 34px;
+}
+
+.top-settings-btn {
+  right: 8px;
+}
+
+.top-toggle-sidebar-btn:hover,
 .top-settings-btn:hover {
   background: var(--color-bg-hover);
   color: var(--color-text-primary);
