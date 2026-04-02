@@ -1,5 +1,6 @@
 <template>
   <div class="editor-view">
+    <FindBar ref="findBarRef" />
     <div class="editor-root scrollable" v-if="editorStore.activeTab">
       <MilkdownProvider>
         <MilkdownEditor :key="editorStore.activeTab.id" />
@@ -12,14 +13,23 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { ref, watch } from 'vue'
 import { MilkdownProvider } from '@milkdown/vue'
 import MilkdownEditor from './MilkdownEditor.vue'
+import FindBar from './FindBar.vue'
 import { useEditorStore } from '../../stores/editor'
 import { useFileSystem } from '../../composables/useFileSystem'
 
 const editorStore = useEditorStore()
 const { openFilePath } = useFileSystem()
+
+const findBarRef = ref<InstanceType<typeof FindBar> | null>(null)
+
+function openFindBar() {
+  findBarRef.value?.open()
+}
+
+defineExpose({ openFindBar })
 
 watch(
   () => editorStore.activeTabId,

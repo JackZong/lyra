@@ -59,6 +59,8 @@ settings.applyTheme()
 
 const { openFile, saveFile, newFile, openFilePath } = useFileSystem()
 
+const editorViewRef = ref<InstanceType<typeof EditorView> | null>(null)
+
 // 恢复上次的工作区与标签页
 const editorStore = useEditorStore()
 const filesStore = useFilesStore()
@@ -127,6 +129,9 @@ function handleKeyDown(e: KeyboardEvent) {
     // Cmd/Ctrl + N：新建文件
     e.preventDefault()
     newFile()
+  } else if (isMod && key === 'f') {
+    e.preventDefault()
+    editorViewRef.value?.openFindBar()
   }
 }
 
