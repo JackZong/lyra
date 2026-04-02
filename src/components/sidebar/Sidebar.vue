@@ -1,5 +1,9 @@
 <template>
-  <aside class="sidebar scrollable" :class="{ 'sidebar-open': settings.sidebarOpen }">
+  <aside
+    class="sidebar scrollable"
+    :class="{ 'sidebar-open': settings.sidebarOpen }"
+    :style="settings.sidebarOpen ? { width: settings.sidebarWidth + 'px' } : undefined"
+  >
     <div class="sidebar-header">
       <span class="sidebar-title">{{ settings.sidebarTab === 'outline' ? '大纲' : '文件' }}</span>
       <div class="sidebar-actions">
@@ -189,7 +193,7 @@ async function createQuickFolder() {
 }
 
 .sidebar-open {
-  width: var(--sidebar-width);
+  width: 220px; /* fallback; actual width set via inline style */
 }
 
 

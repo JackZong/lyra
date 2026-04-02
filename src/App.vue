@@ -27,6 +27,11 @@
     </button>
     <div class="app-body">
       <Sidebar />
+      <div
+        v-if="settings.sidebarOpen"
+        class="sidebar-resize-handle"
+        @mousedown="startResize"
+      ></div>
       <EditorView ref="editorViewRef" />
     </div>
     <ContextMenu />
@@ -36,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import Sidebar from './components/sidebar/Sidebar.vue'
 import EditorView from './components/editor/EditorView.vue'
@@ -126,6 +131,34 @@ function handleKeyDown(e: KeyboardEvent) {
 }
 
 
+const isResizing = ref(false)
+
+function startResize(e: MouseEvent) {
+  e.preventDefault()
+  isResizing.value = true
+  const startX = e.clientX
+  const startWidth = settings.sidebarWidth
+
+  function onMouseMove(ev: MouseEvent) {
+    const delta = ev.clientX - startX
+    const newWidth = Math.min(Math.max(startWidth + delta, 140), 500)
+    settings.sidebarWidth = newWidth
+  }
+
+  function onMouseUp() {
+    isResizing.value = false
+    document.removeEventListener('mousemove', onMouseMove)
+    document.removeEventListener('mouseup', onMouseUp)
+    document.body.style.cursor = ''
+    document.body.style.userSelect = ''
+  }
+
+  document.body.style.cursor = 'col-resize'
+  document.body.style.userSelect = 'none'
+  document.addEventListener('mousemove', onMouseMove)
+  document.addEventListener('mouseup', onMouseUp)
+}
+
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown, true)
 })
@@ -187,5 +220,23 @@ onUnmounted(() => {
 .top-settings-btn:hover {
   background: var(--color-bg-hover);
   color: var(--color-text-primary);
+}
+
+.sidebar-resize-handle {
+  width: 4px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  transition: background-color 0.15s ease;
+  position: relative;
+  z-index: 10;
+  margin-left: -2px;
+  margin-right: -2px;
+}
+
+.sidebar-resize-handle:hover,
+.sidebar-resize-handle:active {
+  background-color: var(--color-primary);
+  opacity: 0.4;
 }
 </style>

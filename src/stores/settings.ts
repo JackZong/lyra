@@ -32,11 +32,14 @@ export const useSettingsStore = defineStore('settings', () => {
   // 侧边栏是否展开
   const sidebarOpen = ref(true)
   // 侧边栏选项卡
-  const sidebarTab = ref<'files' | 'outline'>('files')
+  const sidebarTab = ref<'files' | 'outline'>('outline')
   // 全局搜索面板是否展开
   const omniSearchOpen = ref(false)
   // 设置聚合面板是否弹出
   const settingsModalOpen = ref(false)
+
+  // 侧边栏宽度（像素），支持拖拽调整
+  const sidebarWidth = ref(220)
 
   // -- 深度的编辑器视图调整参数 --
   const editorFontSize = ref(16)
@@ -59,6 +62,7 @@ export const useSettingsStore = defineStore('settings', () => {
         if (parsed.editorFontFamily) editorFontFamily.value = parsed.editorFontFamily
         if (parsed.editorMaxWidth !== undefined) editorMaxWidth.value = parsed.editorMaxWidth
         if (parsed.editorTheme) editorTheme.value = parsed.editorTheme
+        if (parsed.sidebarWidth) sidebarWidth.value = parsed.sidebarWidth
       }
     } catch (e) {
       console.warn('加载设置失败', e)
@@ -75,7 +79,8 @@ export const useSettingsStore = defineStore('settings', () => {
         editorFontSize: editorFontSize.value,
         editorFontFamily: editorFontFamily.value,
         editorMaxWidth: editorMaxWidth.value,
-        editorTheme: editorTheme.value
+        editorTheme: editorTheme.value,
+        sidebarWidth: sidebarWidth.value
       }))
     } catch (e) {
       console.warn('保存设置失败', e)
@@ -84,7 +89,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   // 挂载一个监听所有关键状态变化的机制
   watch(
-    () => [themeMode.value, sidebarOpen.value, sidebarTab.value, editorFontSize.value, editorFontFamily.value, editorMaxWidth.value, editorTheme.value], 
+    () => [themeMode.value, sidebarOpen.value, sidebarTab.value, editorFontSize.value, editorFontFamily.value, editorMaxWidth.value, editorTheme.value, sidebarWidth.value], 
     () => {
       saveSettings()
       applyTheme() // 重绘字体或环境变量
@@ -184,6 +189,7 @@ export const useSettingsStore = defineStore('settings', () => {
   return {
     themeMode,
     sidebarOpen,
+    sidebarWidth,
     sidebarTab,
     omniSearchOpen,
     settingsModalOpen,
