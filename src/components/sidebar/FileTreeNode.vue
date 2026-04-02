@@ -162,7 +162,7 @@ function handleRightClick(e: MouseEvent) {
   border-radius: 0;
   user-select: none;
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: 14px;
   transition: background-color var(--transition-fast), color var(--transition-fast);
   margin-bottom: 0;
   min-height: 20px;

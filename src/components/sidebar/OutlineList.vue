@@ -89,7 +89,7 @@ function scrollToHeading(index: number) {
 
 .outline-item {
   padding: 3px 10px;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--color-text-secondary);
   cursor: pointer;
   white-space: nowrap;

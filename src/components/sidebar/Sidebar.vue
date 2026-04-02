@@ -209,7 +209,7 @@ async function createQuickFolder() {
 }
 
 .sidebar-title {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--color-text-secondary);
 }
@@ -263,7 +263,7 @@ async function createQuickFolder() {
 }
 
 .workspace-label {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--color-text-tertiary);
   font-weight: 500;
   margin: 2px 8px 4px;
@@ -337,7 +337,7 @@ async function createQuickFolder() {
 
 .footer-label {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--color-text-tertiary);
   line-height: 1;
 }

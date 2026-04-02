@@ -852,6 +852,32 @@
   height: 18px;
 }
 
+/* Typora 风格无序列表标记：一级实心圆，嵌套空心圆 */
+.editor-root .milkdown-icon.bullet {
+  font-size: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+.editor-root .milkdown-icon.bullet::before {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ed-list-marker, var(--color-text-tertiary));
+}
+
+.editor-root .children .milkdown-icon.bullet::before {
+  width: 6px;
+  height: 6px;
+  background: transparent;
+  border: 1.5px solid var(--ed-list-marker, var(--color-text-tertiary));
+}
+
 .editor-root .milkdown-list-item-block .label-wrapper .checked,
 .editor-root .milkdown-list-item-block .label-wrapper .unchecked {
   cursor: pointer;
