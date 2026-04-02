@@ -185,10 +185,27 @@ fn take_pending_files(state: tauri::State<PendingFiles>) -> Vec<String> {
     pending.drain(..).collect()
 }
 
+fn collect_file_paths_from_args() -> Vec<String> {
+    std::env::args()
+        .skip(1)
+        .filter(|arg| !arg.starts_with('-'))
+        .filter(|arg| {
+            let p = std::path::Path::new(arg);
+            match p.extension().and_then(|e| e.to_str()) {
+                Some(ext) => matches!(ext, "md" | "markdown" | "mdown" | "mkd" | "mdx" | "txt"),
+                None => false,
+            }
+        })
+        .filter(|arg| std::path::Path::new(arg).exists())
+        .collect()
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    let cli_files = collect_file_paths_from_args();
+
     tauri::Builder::default()
-        .manage(PendingFiles(Mutex::new(Vec::new())))
+        .manage(PendingFiles(Mutex::new(cli_files)))
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
@@ -206,15 +223,15 @@ pub fn run() {
         ])
         .build(tauri::generate_context!())
         .expect("启动 Lyra 时发生错误")
-        .run(|app, event| {
-            if let tauri::RunEvent::Opened { urls } = event {
+        .run(|_app, _event| {
+            #[cfg(any(target_os = "macos", target_os = "ios"))]
+            if let tauri::RunEvent::Opened { urls } = &_event {
                 for url in urls {
                     if let Ok(path) = url.to_file_path() {
                         if let Some(path_str) = path.to_str() {
                             let path_string = path_str.to_string();
-                            // 尝试直接发送给前端；同时缓存，防止前端还没就绪
-                            let _ = app.emit("open-file", path_string.clone());
-                            if let Some(state) = app.try_state::<PendingFiles>() {
+                            let _ = _app.emit("open-file", path_string.clone());
+                            if let Some(state) = _app.try_state::<PendingFiles>() {
                                 state.0.lock().unwrap().push(path_string);
                             }
                         }
