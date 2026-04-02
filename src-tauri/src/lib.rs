@@ -2,7 +2,8 @@
 // 提供文件读写等系统级功能
 
 use std::fs;
-use tauri::Emitter;
+use std::sync::Mutex;
+use tauri::{Emitter, Manager};
 
 /// 读取文本文件内容
 #[tauri::command]
@@ -175,9 +176,19 @@ fn search_in_workspace(path: String, query: String) -> Result<Vec<SearchResult>,
     Ok(results)
 }
 
+struct PendingFiles(Mutex<Vec<String>>);
+
+/// 前端启动后调用，取走缓存的待打开文件路径
+#[tauri::command]
+fn take_pending_files(state: tauri::State<PendingFiles>) -> Vec<String> {
+    let mut pending = state.0.lock().unwrap();
+    pending.drain(..).collect()
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .manage(PendingFiles(Mutex::new(Vec::new())))
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
@@ -191,6 +202,7 @@ pub fn run() {
             delete_node,
             rename_node,
             search_in_workspace,
+            take_pending_files,
         ])
         .build(tauri::generate_context!())
         .expect("启动 Lyra 时发生错误")
@@ -199,7 +211,12 @@ pub fn run() {
                 for url in urls {
                     if let Ok(path) = url.to_file_path() {
                         if let Some(path_str) = path.to_str() {
-                            let _ = app.emit("open-file", path_str.to_string());
+                            let path_string = path_str.to_string();
+                            // 尝试直接发送给前端；同时缓存，防止前端还没就绪
+                            let _ = app.emit("open-file", path_string.clone());
+                            if let Some(state) = app.try_state::<PendingFiles>() {
+                                state.0.lock().unwrap().push(path_string);
+                            }
                         }
                     }
                 }

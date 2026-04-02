@@ -39,6 +39,7 @@
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { listen } from '@tauri-apps/api/event'
+import { invoke } from '@tauri-apps/api/core'
 import Sidebar from './components/sidebar/Sidebar.vue'
 import EditorView from './components/editor/EditorView.vue'
 import OmniSearch from './components/common/OmniSearch.vue'
@@ -102,6 +103,16 @@ onMounted(async () => {
         }
       }
     })
+  }
+
+  // 查询启动时缓存的待打开文件（解决 "Open With" 事件早于前端就绪的问题）
+  try {
+    const pending = await invoke<string[]>('take_pending_files')
+    if (pending && pending.length > 0) {
+      await openFilePath(pending[pending.length - 1])
+    }
+  } catch {
+    // ignore
   }
 })
 
