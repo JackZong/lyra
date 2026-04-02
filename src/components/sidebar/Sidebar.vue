@@ -5,47 +5,36 @@
     :style="settings.sidebarOpen ? { width: settings.sidebarWidth + 'px' } : undefined"
   >
     <div class="sidebar-header">
-      <span class="sidebar-title">{{ settings.sidebarTab === 'outline' ? '大纲' : '文件' }}</span>
-      <div class="sidebar-actions">
-        <!-- 仅在“大纲模式”显示顶部切换按钮；文件模式更贴近 Typora 的底部工具栏 -->
-        <template v-if="settings.sidebarTab === 'outline'">
-          <button
-            class="icon-btn"
-            @click="toggleOutlineSearch"
-            title="搜索标题"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </button>
-          <button
-            class="tab-btn"
-            @click="toggleSidebarTab('files')"
-            title="文件视图"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-            </svg>
-          </button>
-          <button
-            class="tab-btn active"
-            @click="toggleSidebarTab('outline')"
-            title="大纲视图"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="8" y1="6" x2="21" y2="6"></line>
-              <line x1="8" y1="12" x2="21" y2="12"></line>
-              <line x1="8" y1="18" x2="21" y2="18"></line>
-              <line x1="3" y1="6" x2="3.01" y2="6"></line>
-              <line x1="3" y1="12" x2="3.01" y2="12"></line>
-              <line x1="3" y1="18" x2="3.01" y2="18"></line>
-            </svg>
-          </button>
-        </template>
-        <button class="icon-btn" @click="files.openWorkspace()" v-if="settings.sidebarTab === 'files'" title="打开文件夹">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="header-left">
+        <button
+          class="header-icon-btn"
+          @click="toggleSidebarTab(settings.sidebarTab === 'outline' ? 'files' : 'outline')"
+          :title="settings.sidebarTab === 'outline' ? '切换到文件' : '切换到大纲'"
+        >
+          <svg v-if="settings.sidebarTab === 'outline'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <span class="sidebar-title">{{ settings.sidebarTab === 'outline' ? '大纲' : '文件' }}</span>
+      <div class="header-right">
+        <button
+          v-if="settings.sidebarTab === 'outline'"
+          class="header-icon-btn"
+          @click="toggleOutlineSearch"
+          title="搜索标题"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
       </div>
@@ -101,16 +90,6 @@
       <button class="footer-btn" title="打开文件夹" @click="files.openWorkspace()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-        </svg>
-      </button>
-      <button class="footer-btn" title="切换到大纲" @click="toggleSidebarTab('outline')">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="8" y1="6" x2="21" y2="6"></line>
-          <line x1="8" y1="12" x2="21" y2="12"></line>
-          <line x1="8" y1="18" x2="21" y2="18"></line>
-          <line x1="3" y1="6" x2="3.01" y2="6"></line>
-          <line x1="3" y1="12" x2="3.01" y2="12"></line>
-          <line x1="3" y1="18" x2="3.01" y2="18"></line>
         </svg>
       </button>
       <span class="footer-label">文件</span>
@@ -178,7 +157,6 @@ async function createQuickFile() {
     const [node] = files.fileTree.splice(idx, 1)
     files.fileTree.push(node)
   }
-  // 创建后自动打开，确保可立即编辑
   await openFilePath(path)
 }
 
@@ -215,8 +193,6 @@ async function createQuickFolder() {
   width: 220px; /* fallback; actual width set via inline style */
 }
 
-
-
 .sidebar-header {
   padding: 0 10px;
   border-bottom: 1px solid var(--color-border-subtle);
@@ -227,20 +203,16 @@ async function createQuickFolder() {
   height: 34px;
 }
 
-.sidebar-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-}
-
-.sidebar-actions {
+.header-left,
+.header-right {
+  width: 24px;
   display: flex;
   align-items: center;
-  gap: 2px;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.tab-btn,
-.icon-btn {
+.header-icon-btn {
   background: transparent;
   border: none;
   cursor: pointer;
@@ -252,18 +224,25 @@ async function createQuickFolder() {
   height: 22px;
   padding: 0;
   border-radius: 4px;
-  transition: all var(--transition-fast);
+  opacity: 0;
+  transition: all 0.15s ease;
 }
 
-.tab-btn:hover,
-.icon-btn:hover {
+.sidebar:hover .header-icon-btn {
+  opacity: 1;
+}
+
+.header-icon-btn:hover {
   background-color: var(--color-bg-hover);
   color: var(--color-text-primary);
 }
 
-.tab-btn.active {
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-active);
+.sidebar-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  flex: 1;
+  text-align: center;
 }
 
 .sidebar-content {
@@ -329,24 +308,28 @@ async function createQuickFolder() {
 }
 
 .sidebar-footer {
-  height: 24px;
+  height: 28px;
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 0 6px;
+  gap: 6px;
+  padding: 0 8px;
   border-top: 1px solid var(--color-border-subtle);
   background: var(--color-bg-tertiary);
   flex-shrink: 0;
 }
 
 .footer-btn {
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 3px;
+  border-radius: 4px;
   color: var(--color-text-tertiary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.12s ease;
 }
 
 .footer-btn:hover {
