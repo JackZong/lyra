@@ -209,6 +209,81 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
+        .setup(|app| {
+            use tauri::menu::*;
+
+            // 首选项菜单项
+            let preferences = MenuItemBuilder::new("首选项...")
+                .id("preferences")
+                .accelerator("CmdOrCtrl+,")
+                .build(app)?;
+
+            // 应用子菜单（macOS 第一个子菜单即为应用菜单）
+            let app_submenu = SubmenuBuilder::new(app, "Lyra")
+                .about(Some(AboutMetadata::default()))
+                .separator()
+                .item(&preferences)
+                .separator()
+                .services()
+                .separator()
+                .hide()
+                .hide_others()
+                .show_all()
+                .separator()
+                .quit()
+                .build()?;
+
+            // File 菜单
+            let file_submenu = SubmenuBuilder::new(app, "File")
+                .close_window()
+                .build()?;
+
+            // Edit 菜单
+            let edit_submenu = SubmenuBuilder::new(app, "Edit")
+                .undo()
+                .redo()
+                .separator()
+                .cut()
+                .copy()
+                .paste()
+                .select_all()
+                .build()?;
+
+            // View 菜单
+            let view_submenu = SubmenuBuilder::new(app, "View")
+                .build()?;
+
+            // Window 菜单
+            let window_submenu = SubmenuBuilder::new(app, "Window")
+                .minimize()
+                .build()?;
+
+            // Help 菜单
+            let help_submenu = SubmenuBuilder::new(app, "Help")
+                .build()?;
+
+            let menu = MenuBuilder::new(app)
+                .items(&[
+                    &app_submenu,
+                    &file_submenu,
+                    &edit_submenu,
+                    &view_submenu,
+                    &window_submenu,
+                    &help_submenu,
+                ])
+                .build()?;
+
+            app.set_menu(menu)?;
+
+            // 监听菜单事件
+            app.on_menu_event(|app_handle, event| {
+                if event.id() == "preferences" {
+                    let _ = app_handle.emit("open-settings", ());
+                }
+            });
+
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             read_file,
             write_file,

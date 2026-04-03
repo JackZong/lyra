@@ -84,6 +84,11 @@ onMounted(async () => {
     }
   })
 
+  // 监听菜单"首选项"事件
+  listen('open-settings', () => {
+    settings.toggleSettingsModal()
+  })
+
   // 恢复状态
   await filesStore.restoreState()
   await editorStore.restoreState()
