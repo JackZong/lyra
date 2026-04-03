@@ -200,6 +200,84 @@ fn collect_file_paths_from_args() -> Vec<String> {
         .collect()
 }
 
+/// 构建原生菜单
+fn build_menu(app: &tauri::AppHandle, lang: &str) -> Result<tauri::menu::Menu<tauri::Wry>, Box<dyn std::error::Error>> {
+    use tauri::menu::*;
+
+    let is_zh = lang == "zh";
+
+    // 自定义菜单项文本
+    let preferences = MenuItemBuilder::new(if is_zh { "首选项..." } else { "Preferences..." })
+        .id("preferences")
+        .accelerator("CmdOrCtrl+,")
+        .build(app)?;
+
+    // Lyra 应用菜单
+    let app_submenu = SubmenuBuilder::new(app, "Lyra")
+        .item(&PredefinedMenuItem::about(app, Some(if is_zh { "关于 Lyra" } else { "About Lyra" }), Some(AboutMetadata::default()))?)
+        .separator()
+        .item(&preferences)
+        .separator()
+        .item(&PredefinedMenuItem::services(app, Some(if is_zh { "服务" } else { "Services" }))?)
+        .separator()
+        .item(&PredefinedMenuItem::hide(app, Some(if is_zh { "隐藏 Lyra" } else { "Hide Lyra" }))?)
+        .item(&PredefinedMenuItem::hide_others(app, Some(if is_zh { "隐藏其他" } else { "Hide Others" }))?)
+        .item(&PredefinedMenuItem::show_all(app, Some(if is_zh { "显示全部" } else { "Show All" }))?)
+        .separator()
+        .item(&PredefinedMenuItem::quit(app, Some(if is_zh { "退出 Lyra" } else { "Quit Lyra" }))?)
+        .build()?;
+
+    // 文件菜单
+    let file_submenu = SubmenuBuilder::new(app, if is_zh { "文件" } else { "File" })
+        .item(&PredefinedMenuItem::close_window(app, Some(if is_zh { "关闭窗口" } else { "Close Window" }))?)
+        .build()?;
+
+    // 编辑菜单
+    let edit_submenu = SubmenuBuilder::new(app, if is_zh { "编辑" } else { "Edit" })
+        .item(&PredefinedMenuItem::undo(app, Some(if is_zh { "撤销" } else { "Undo" }))?)
+        .item(&PredefinedMenuItem::redo(app, Some(if is_zh { "重做" } else { "Redo" }))?)
+        .separator()
+        .item(&PredefinedMenuItem::cut(app, Some(if is_zh { "剪切" } else { "Cut" }))?)
+        .item(&PredefinedMenuItem::copy(app, Some(if is_zh { "复制" } else { "Copy" }))?)
+        .item(&PredefinedMenuItem::paste(app, Some(if is_zh { "粘贴" } else { "Paste" }))?)
+        .item(&PredefinedMenuItem::select_all(app, Some(if is_zh { "全选" } else { "Select All" }))?)
+        .build()?;
+
+    // 显示菜单
+    let view_submenu = SubmenuBuilder::new(app, if is_zh { "显示" } else { "View" })
+        .build()?;
+
+    // 窗口菜单
+    let window_submenu = SubmenuBuilder::new(app, if is_zh { "窗口" } else { "Window" })
+        .item(&PredefinedMenuItem::minimize(app, Some(if is_zh { "最小化" } else { "Minimize" }))?)
+        .build()?;
+
+    // 帮助菜单
+    let help_submenu = SubmenuBuilder::new(app, if is_zh { "帮助" } else { "Help" })
+        .build()?;
+
+    let menu = MenuBuilder::new(app)
+        .items(&[
+            &app_submenu,
+            &file_submenu,
+            &edit_submenu,
+            &view_submenu,
+            &window_submenu,
+            &help_submenu,
+        ])
+        .build()?;
+
+    Ok(menu)
+}
+
+/// 前端切换语言时更新原生菜单
+#[tauri::command]
+fn update_menu_language(app: tauri::AppHandle, lang: String) -> Result<(), String> {
+    let menu = build_menu(&app, &lang).map_err(|e| format!("菜单构建失败: {}", e))?;
+    app.set_menu(menu).map_err(|e| format!("设置菜单失败: {}", e))?;
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let cli_files = collect_file_paths_from_args();
@@ -210,69 +288,12 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .setup(|app| {
-            use tauri::menu::*;
+            // 检测系统语言
+            let sys_lang = std::env::var("LANG").unwrap_or_default();
+            let lang = if sys_lang.starts_with("zh") { "zh" } else { "en" };
 
-            // 首选项菜单项
-            let preferences = MenuItemBuilder::new("首选项...")
-                .id("preferences")
-                .accelerator("CmdOrCtrl+,")
-                .build(app)?;
-
-            // 应用子菜单（macOS 第一个子菜单即为应用菜单）
-            let app_submenu = SubmenuBuilder::new(app, "Lyra")
-                .about(Some(AboutMetadata::default()))
-                .separator()
-                .item(&preferences)
-                .separator()
-                .services()
-                .separator()
-                .hide()
-                .hide_others()
-                .show_all()
-                .separator()
-                .quit()
-                .build()?;
-
-            // File 菜单
-            let file_submenu = SubmenuBuilder::new(app, "File")
-                .close_window()
-                .build()?;
-
-            // Edit 菜单
-            let edit_submenu = SubmenuBuilder::new(app, "Edit")
-                .undo()
-                .redo()
-                .separator()
-                .cut()
-                .copy()
-                .paste()
-                .select_all()
-                .build()?;
-
-            // View 菜单
-            let view_submenu = SubmenuBuilder::new(app, "View")
-                .build()?;
-
-            // Window 菜单
-            let window_submenu = SubmenuBuilder::new(app, "Window")
-                .minimize()
-                .build()?;
-
-            // Help 菜单
-            let help_submenu = SubmenuBuilder::new(app, "Help")
-                .build()?;
-
-            let menu = MenuBuilder::new(app)
-                .items(&[
-                    &app_submenu,
-                    &file_submenu,
-                    &edit_submenu,
-                    &view_submenu,
-                    &window_submenu,
-                    &help_submenu,
-                ])
-                .build()?;
-
+            let menu = build_menu(&app.handle(), lang)
+                .map_err(|e| e.to_string())?;
             app.set_menu(menu)?;
 
             // 监听菜单事件
@@ -295,6 +316,7 @@ pub fn run() {
             rename_node,
             search_in_workspace,
             take_pending_files,
+            update_menu_language,
         ])
         .build(tauri::generate_context!())
         .expect("启动 Lyra 时发生错误")

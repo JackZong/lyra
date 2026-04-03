@@ -238,7 +238,7 @@
 
 /* ---- 占位符 ---- */
 .editor-root .ProseMirror p.is-editor-empty:first-child::before {
-  content: '开始书写...';
+  content: var(--editor-placeholder, '开始书写...');
   color: var(--color-text-tertiary);
   float: left;
   height: 0;

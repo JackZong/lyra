@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
+import { detectSystemLanguage, type LangCode } from '../i18n'
 
 /** 可选的编辑区主题标识 */
 export type EditorThemeName = 'github' | 'gothic' | 'newsprint' | 'night' | 'pixyll' | 'whitey'
@@ -38,6 +39,9 @@ export const useSettingsStore = defineStore('settings', () => {
   // 设置聚合面板是否弹出
   const settingsModalOpen = ref(false)
 
+  // 界面语言
+  const language = ref<LangCode>(detectSystemLanguage())
+
   // 侧边栏宽度（像素），支持拖拽调整
   const sidebarWidth = ref(220)
 
@@ -63,6 +67,7 @@ export const useSettingsStore = defineStore('settings', () => {
         if (parsed.editorMaxWidth !== undefined) editorMaxWidth.value = parsed.editorMaxWidth
         if (parsed.editorTheme) editorTheme.value = parsed.editorTheme
         if (parsed.sidebarWidth) sidebarWidth.value = parsed.sidebarWidth
+        if (parsed.language) language.value = parsed.language
       }
     } catch (e) {
       console.warn('加载设置失败', e)
@@ -80,7 +85,8 @@ export const useSettingsStore = defineStore('settings', () => {
         editorFontFamily: editorFontFamily.value,
         editorMaxWidth: editorMaxWidth.value,
         editorTheme: editorTheme.value,
-        sidebarWidth: sidebarWidth.value
+        sidebarWidth: sidebarWidth.value,
+        language: language.value
       }))
     } catch (e) {
       console.warn('保存设置失败', e)
@@ -89,7 +95,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   // 挂载一个监听所有关键状态变化的机制
   watch(
-    () => [themeMode.value, sidebarOpen.value, sidebarTab.value, editorFontSize.value, editorFontFamily.value, editorMaxWidth.value, editorTheme.value, sidebarWidth.value], 
+    () => [themeMode.value, sidebarOpen.value, sidebarTab.value, editorFontSize.value, editorFontFamily.value, editorMaxWidth.value, editorTheme.value, sidebarWidth.value, language.value], 
     () => {
       saveSettings()
       applyTheme() // 重绘字体或环境变量
@@ -121,6 +127,9 @@ export const useSettingsStore = defineStore('settings', () => {
     document.documentElement.style.setProperty('--editor-max-width', editorMaxWidth.value === 0 ? '100%' : `${editorMaxWidth.value}px`)
     // 应用编辑区主题
     document.body.setAttribute('data-editor-theme', editorTheme.value)
+    // 编辑器占位符国际化
+    const placeholder = language.value === 'zh' ? '开始书写...' : 'Start writing...'
+    document.documentElement.style.setProperty('--editor-placeholder', `'${placeholder}'`)
   }
 
   /**
@@ -186,6 +195,16 @@ export const useSettingsStore = defineStore('settings', () => {
     })
   }
 
+  // 切换语言时更新原生菜单
+  watch(language, async (newLang) => {
+    try {
+      const { invoke } = await import('@tauri-apps/api/core')
+      await invoke('update_menu_language', { lang: newLang })
+    } catch {
+      // 浏览器环境下忽略
+    }
+  })
+
   return {
     themeMode,
     sidebarOpen,
@@ -193,6 +212,7 @@ export const useSettingsStore = defineStore('settings', () => {
     sidebarTab,
     omniSearchOpen,
     settingsModalOpen,
+    language,
     editorFontSize,
     editorFontFamily,
     editorMaxWidth,

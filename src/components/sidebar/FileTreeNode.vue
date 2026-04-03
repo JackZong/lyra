@@ -56,6 +56,8 @@ const filesStore = useFilesStore()
 const editorStore = useEditorStore()
 const { openFilePath, createNodeFile, createNodeDir, deleteNode, renameNode } = useFileSystem()
 const { openMenu } = useContextMenu()
+import { useI18n } from '../../i18n'
+const { t } = useI18n()
 
 async function handleClick() {
   if (props.node.is_dir) {
@@ -73,9 +75,9 @@ function handleRightClick(e: MouseEvent) {
 
   if (isDir) {
     items.push({
-      label: '新建 Markdown 文件',
+      label: t.value.contextMenu.newMarkdownFile,
       action: async () => {
-        const name = prompt('请输入文件名称', '新文件.md')
+        const name = prompt(t.value.contextMenu.enterFileName, t.value.contextMenu.defaultFileName)
         if (!name) return
         const separator = props.node.path.includes('\\') ? '\\' : '/'
         const targetPath = `${props.node.path}${separator}${name}`
@@ -89,9 +91,9 @@ function handleRightClick(e: MouseEvent) {
     })
     
     items.push({
-      label: '新建文件夹',
+      label: t.value.contextMenu.newFolder,
       action: async () => {
-        const name = prompt('请输入文件夹名称', '新建文件夹')
+        const name = prompt(t.value.contextMenu.enterFolderName, t.value.contextMenu.defaultFolderName)
         if (!name) return
         const separator = props.node.path.includes('\\') ? '\\' : '/'
         const targetPath = `${props.node.path}${separator}${name}`
@@ -106,9 +108,9 @@ function handleRightClick(e: MouseEvent) {
   }
 
   items.push({
-    label: '重命名',
+    label: t.value.contextMenu.rename,
     action: async () => {
-      const newName = prompt('输入新的名称', props.node.name)
+      const newName = prompt(t.value.contextMenu.enterNewName, props.node.name)
       if (!newName || newName === props.node.name) return
       
       const separator = props.node.path.includes('\\') ? '\\' : '/'
@@ -132,10 +134,10 @@ function handleRightClick(e: MouseEvent) {
   })
 
   items.push({
-    label: '删除',
+    label: t.value.contextMenu.delete,
     danger: true,
     action: async () => {
-      const confirmMsg = `确定要永久删除 ${props.node.name} 吗？`
+      const confirmMsg = t.value.contextMenu.confirmDelete.replace('{name}', props.node.name)
       if (confirm(confirmMsg)) {
         try {
           await deleteNode(props.node.path)

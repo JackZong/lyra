@@ -28,9 +28,11 @@ import 'katex/dist/katex.min.css'
 
 import { useEditorStore } from '../../stores/editor'
 import { useFileSystem } from '../../composables/useFileSystem'
+import { useI18n } from '../../i18n'
 
 const editorStore = useEditorStore()
 const { triggerAutoSave } = useFileSystem()
+const { t } = useI18n()
 const tabIdAtMount = editorStore.activeTabId
 const initialContent = editorStore.content || ''
 
@@ -132,9 +134,9 @@ useEditor((root) =>
         ...defaultCfg,
         languages,
         extensions: [oneDark, EditorView.lineWrapping],
-        searchPlaceholder: '搜索语言...',
-        noResultText: '未找到匹配语言',
-        copyText: '复制',
+        searchPlaceholder: t.value.editor.searchLanguage,
+        noResultText: t.value.editor.noLanguageMatch,
+        copyText: t.value.editor.copy,
       }))
 
       ctx.get(listenerCtx).markdownUpdated((_ctx, markdown) => {

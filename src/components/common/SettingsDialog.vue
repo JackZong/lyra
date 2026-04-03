@@ -2,8 +2,8 @@
   <div v-if="settings.settingsModalOpen" class="settings-backdrop" @click="close">
     <div class="settings-container" @click.stop>
       <div class="settings-header">
-        <h2>首选项</h2>
-        <button class="icon-btn" @click="close" title="关闭 (Esc)">
+        <h2>{{ t.settings.title }}</h2>
+        <button class="icon-btn" @click="close" :title="t.settings.close">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -12,27 +12,44 @@
       </div>
 
       <div class="settings-body scrollable">
+        <!-- 语言设置 -->
         <section class="settings-section">
-          <h3>外观</h3>
+          <h3>{{ t.settings.language }}</h3>
+          <div class="setting-item">
+            <div class="setting-desc">
+              <strong>{{ t.settings.languageLabel }}</strong>
+              <p>{{ t.settings.languageDesc }}</p>
+            </div>
+            <div class="setting-control">
+              <select v-model="settings.language">
+                <option value="zh">中文</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="settings-section">
+          <h3>{{ t.settings.appearance }}</h3>
           
           <div class="setting-item">
             <div class="setting-desc">
-              <strong>颜色主题 </strong>
-              <p>影响外壳边框及底色：明亮、暗黑或跟随系统</p>
+              <strong>{{ t.settings.colorTheme }}</strong>
+              <p>{{ t.settings.colorThemeDesc }}</p>
             </div>
             <div class="setting-control">
               <select v-model="settings.themeMode">
-                <option value="system">跟随系统</option>
-                <option value="light">始终明亮</option>
-                <option value="dark">始终暗黑</option>
+                <option value="system">{{ t.settings.followSystem }}</option>
+                <option value="light">{{ t.settings.alwaysLight }}</option>
+                <option value="dark">{{ t.settings.alwaysDark }}</option>
               </select>
             </div>
           </div>
 
           <div class="setting-item theme-grid-item">
             <div class="setting-desc">
-              <strong>编辑区主题 (Theme)</strong>
-              <p>改变正文的排版风格、字体及高亮配色</p>
+              <strong>{{ t.settings.editorTheme }}</strong>
+              <p>{{ t.settings.editorThemeDesc }}</p>
             </div>
             <div class="theme-grid">
               <div 
@@ -48,7 +65,7 @@
                 </div>
                 <div class="theme-info">
                   <span class="theme-name">{{ theme.label }}</span>
-                  <span class="theme-desc">{{ theme.description }}</span>
+                  <span class="theme-desc">{{ localizedThemeDesc(theme.id) }}</span>
                 </div>
               </div>
             </div>
@@ -56,12 +73,12 @@
         </section>
 
         <section class="settings-section">
-          <h3>排版与字体</h3>
+          <h3>{{ t.settings.typographyAndFont }}</h3>
           
           <div class="setting-item">
             <div class="setting-desc">
-              <strong>基础字号 (FontSize)</strong>
-              <p>编辑区内的默认文字尺寸：{{ settings.editorFontSize }}px</p>
+              <strong>{{ t.settings.fontSize }}</strong>
+              <p>{{ t.settings.fontSizeDesc.replace('{size}', String(settings.editorFontSize)) }}</p>
             </div>
             <div class="setting-control">
               <input type="range" min="12" max="24" step="1" v-model.number="settings.editorFontSize" />
@@ -70,8 +87,8 @@
 
           <div class="setting-item">
             <div class="setting-desc">
-              <strong>页面最大宽度</strong>
-              <p>如果设置为 0 将满幅拉伸，目前：{{ settings.editorMaxWidth === 0 ? '满屏的' : settings.editorMaxWidth + 'px' }}</p>
+              <strong>{{ t.settings.maxWidth }}</strong>
+              <p>{{ t.settings.maxWidthDesc.replace('{value}', settings.editorMaxWidth === 0 ? t.settings.maxWidthFull : settings.editorMaxWidth + 'px') }}</p>
             </div>
             <div class="setting-control">
               <input type="range" min="0" max="1400" step="50" v-model.number="settings.editorMaxWidth" />
@@ -80,8 +97,8 @@
           
           <div class="setting-item">
             <div class="setting-desc">
-              <strong>阅读字体集 (FontFamily)</strong>
-              <p>用于正文内容的字体族</p>
+              <strong>{{ t.settings.fontFamily }}</strong>
+              <p>{{ t.settings.fontFamilyDesc }}</p>
             </div>
             <div class="setting-control">
               <input type="text" v-model="settings.editorFontFamily" style="width: 200px" />
@@ -95,9 +112,17 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
-import { useSettingsStore, EDITOR_THEMES } from '../../stores/settings'
+import { useSettingsStore, EDITOR_THEMES, type EditorThemeName } from '../../stores/settings'
+import { useI18n } from '../../i18n'
 
 const settings = useSettingsStore()
+const { t } = useI18n()
+
+// 根据语言返回主题描述
+function localizedThemeDesc(id: EditorThemeName): string {
+  const key = id as keyof typeof t.value.themes
+  return t.value.themes[key] || id
+}
 
 function close() {
   settings.settingsModalOpen = false

@@ -3,7 +3,7 @@
     <button
       class="top-settings-btn"
       @click="settings.toggleSettingsModal()"
-      title="设置 (Cmd+,)"
+      :title="t.app.settings"
     >
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3"></circle>
@@ -13,7 +13,7 @@
     <button
       class="top-toggle-sidebar-btn"
       @click="settings.toggleSidebar()"
-      :title="settings.sidebarOpen ? '隐藏侧边栏' : '显示侧边栏'"
+      :title="settings.sidebarOpen ? t.app.hideSidebar : t.app.showSidebar"
     >
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -49,10 +49,13 @@ import { useSettingsStore } from './stores/settings'
 import { useFilesStore } from './stores/files'
 import { useEditorStore } from './stores/editor'
 import { useFileSystem } from './composables/useFileSystem'
+import { useI18n } from './i18n'
 
 // 初始化设置，应用主题
 const settings = useSettingsStore()
 settings.applyTheme()
+
+const { t } = useI18n()
 
 const { openFile, saveFile, newFile, openFilePath } = useFileSystem()
 

@@ -9,7 +9,7 @@
         <button
           class="header-icon-btn"
           @click="toggleSidebarTab(settings.sidebarTab === 'outline' ? 'files' : 'outline')"
-          :title="settings.sidebarTab === 'outline' ? '切换到文件' : '切换到大纲'"
+          :title="settings.sidebarTab === 'outline' ? t.sidebar.switchToFiles : t.sidebar.switchToOutline"
         >
           <svg v-if="settings.sidebarTab === 'outline'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
@@ -24,13 +24,13 @@
           </svg>
         </button>
       </div>
-      <span class="sidebar-title">{{ settings.sidebarTab === 'outline' ? '大纲' : '文件' }}</span>
+      <span class="sidebar-title">{{ settings.sidebarTab === 'outline' ? t.sidebar.outline : t.sidebar.files }}</span>
       <div class="header-right">
         <button
           v-if="settings.sidebarTab === 'outline'"
           class="header-icon-btn"
           @click="toggleOutlineSearch"
-          title="搜索标题"
+          :title="t.sidebar.searchHeadings"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
@@ -62,8 +62,8 @@
           <rect x="8" y="4" width="24" height="32" rx="3" stroke="currentColor" stroke-width="1.5"/>
           <path d="M14 14h12M14 20h8M14 26h10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
         </svg>
-        <p>打开一个文件夹<br>以查看文件树</p>
-        <button class="primary-btn mt-2" @click="files.openWorkspace()">打开文件夹</button>
+        <p v-html="t.sidebar.openFolderHint.replace('\n', '<br>')"></p>
+        <button class="primary-btn mt-2" @click="files.openWorkspace()">{{ t.sidebar.openFolder }}</button>
       </div>
       </template>
 
@@ -74,25 +74,25 @@
     </div>
 
     <div v-if="settings.sidebarTab === 'files'" class="sidebar-footer">
-      <button class="footer-btn" title="新建文件" @click="createQuickFile">
+      <button class="footer-btn" :title="t.sidebar.newFile" @click="createQuickFile">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
       </button>
-      <button class="footer-btn" title="新建文件夹" @click="createQuickFolder">
+      <button class="footer-btn" :title="t.sidebar.newFolder" @click="createQuickFolder">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
           <line x1="12" y1="11" x2="12" y2="17"></line>
           <line x1="9" y1="14" x2="15" y2="14"></line>
         </svg>
       </button>
-      <button class="footer-btn" title="打开文件夹" @click="files.openWorkspace()">
+      <button class="footer-btn" :title="t.sidebar.openFolder" @click="files.openWorkspace()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
         </svg>
       </button>
-      <span class="footer-label">文件</span>
+      <span class="footer-label">{{ t.sidebar.files }}</span>
     </div>
   </aside>
 </template>
@@ -104,11 +104,13 @@ import { useFilesStore } from '../../stores/files'
 import { useFileSystem } from '../../composables/useFileSystem'
 import FileTreeNode from './FileTreeNode.vue'
 import OutlineList from './OutlineList.vue'
+import { useI18n } from '../../i18n'
 
 const settings = useSettingsStore()
 const files = useFilesStore()
 const { createNodeFile, createNodeDir, openFilePath } = useFileSystem()
 const outlineListRef = ref<InstanceType<typeof OutlineList> | null>(null)
+const { t } = useI18n()
 
 function toggleOutlineSearch() {
   if (outlineListRef.value?.showSearch) {

@@ -9,7 +9,7 @@
         ref="searchInputRef"
         v-model="searchQuery"
         class="search-input"
-        placeholder="搜索标题..."
+        :placeholder="t.outline.searchPlaceholder"
         @keydown.escape="closeSearch"
       />
       <button v-if="searchQuery" class="search-clear" @click="searchQuery = ''">
@@ -20,7 +20,7 @@
       </button>
     </div>
     <div v-if="filteredOutline.length === 0" class="empty-state">
-      <p>{{ outline.length === 0 ? '当前文档没有标题' : '没有匹配的标题' }}</p>
+      <p>{{ outline.length === 0 ? t.outline.noHeadings : t.outline.noMatch }}</p>
     </div>
     <div v-else class="outline-list">
       <div
@@ -40,8 +40,10 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useEditorStore } from '../../stores/editor'
+import { useI18n } from '../../i18n'
 
 const editorStore = useEditorStore()
+const { t } = useI18n()
 const searchQuery = ref('')
 const showSearch = ref(false)
 const searchInputRef = ref<HTMLInputElement | null>(null)
