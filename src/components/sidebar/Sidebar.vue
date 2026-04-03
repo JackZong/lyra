@@ -317,7 +317,7 @@ async function createQuickFolder() {
 }
 
 .primary-btn:hover {
-  background-color: var(--color-primary-dark);
+  background-color: var(--color-primary-active);
 }
 
 .sidebar-footer {

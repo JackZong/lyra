@@ -62,12 +62,12 @@ export const useFilesStore = defineStore('files', () => {
       
       fileTree.value = processNodes(nodes)
       
-      // 保存至本地持久化
-      localStorage.setItem('lyra:workspace', path)
+      // 不再保存至本地持久化，保证下次打开状态为全新
+      // localStorage.setItem('lyra:workspace', path)
     } catch (e) {
       console.error('读取根目录失败:', e)
       fileTree.value = []
-      localStorage.removeItem('lyra:workspace')
+      // localStorage.removeItem('lyra:workspace')
     } finally {
       isLoading.value = false
     }
@@ -83,20 +83,25 @@ export const useFilesStore = defineStore('files', () => {
     node.isOpen = !node.isOpen
 
     // 如果还没有加载过 children 并且现在要展开，则读取
-    if (node.isOpen && (!node.children || node.children.length === 0)) {
-      try {
-        const children = await invoke<FileNode[]>('read_directory', { path: node.path })
-        // 同样初始化状态
-        node.children = children.map(n => {
-          if (n.is_dir) {
-             n.isOpen = false
-             n.children = []
-          }
-          return n
-        })
-      } catch (e) {
-        console.error(`读取子目录 ${node.path} 失败:`, e)
+    if (node.isOpen) {
+      if (!node.children || node.children.length === 0) {
+        try {
+          const children = await invoke<FileNode[]>('read_directory', { path: node.path })
+          // 同样初始化状态
+          node.children = children.map(n => {
+            if (n.is_dir) {
+               n.isOpen = false
+               n.children = []
+            }
+            return n
+          })
+        } catch (e) {
+          console.error(`读取子目录 ${node.path} 失败:`, e)
+        }
       }
+    } else {
+      // 关闭之后清除缓存，保证下次重新获取
+      node.children = []
     }
   }
 
@@ -104,10 +109,13 @@ export const useFilesStore = defineStore('files', () => {
    * 从本地缓存恢复状态
    */
   async function restoreState() {
+    // 移除原有从 localStorage 恢复的逻辑，确保每次打开没有默认数据
+    /*
     const savedPath = localStorage.getItem('lyra:workspace')
     if (savedPath) {
       await loadWorkspace(savedPath)
     }
+    */
   }
 
   return {

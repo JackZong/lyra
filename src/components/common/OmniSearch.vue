@@ -82,6 +82,10 @@ watch(() => settings.omniSearchOpen, (isOpen) => {
 
 function close() {
   settings.omniSearchOpen = false
+  if (searchTimeout) clearTimeout(searchTimeout)
+  query.value = ''
+  results.value = []
+  selectedIndex.value = 0
 }
 
 function handleInput() {
