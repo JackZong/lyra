@@ -74,39 +74,81 @@ const filteredOutline = computed(() => {
   return outline.value.filter(item => item.text.toLowerCase().includes(q))
 })
 
+// 直接从 ProseMirror 渲染的 DOM 中提取标题，避免 Markdown 序列化格式差异导致正则失配
+const HEADING_SELECTOR = '.ProseMirror h1, .ProseMirror h2, .ProseMirror h3, .ProseMirror h4, .ProseMirror h5, .ProseMirror h6'
+
+function extractOutlineFromDOM() {
+  const headings = document.querySelectorAll(HEADING_SELECTOR)
+  const newOutline: OutlineItem[] = []
+
+  headings.forEach((el, i) => {
+    const text = (el as HTMLElement).innerText?.trim()
+    if (!text) return
+    const level = parseInt(el.tagName[1], 10)
+    newOutline.push({
+      id: `heading-${i}`,
+      level,
+      text,
+      originalIndex: newOutline.length
+    })
+  })
+
+  outline.value = newOutline
+}
+
+// 防抖定时器，避免高频 DOM 变更时过度提取
+let extractTimer: ReturnType<typeof setTimeout> | null = null
+
+function scheduleExtract() {
+  if (extractTimer) clearTimeout(extractTimer)
+  extractTimer = setTimeout(extractOutlineFromDOM, 150)
+}
+
+// MutationObserver 监听编辑器 DOM 变化，实时更新大纲
+let mutationObserver: MutationObserver | null = null
+
+function startObserving() {
+  stopObserving()
+
+  const proseMirror = document.querySelector('.ProseMirror')
+  if (!proseMirror) return
+
+  mutationObserver = new MutationObserver(scheduleExtract)
+  mutationObserver.observe(proseMirror, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  })
+
+  // 初始提取一次
+  extractOutlineFromDOM()
+}
+
+function stopObserving() {
+  if (mutationObserver) {
+    mutationObserver.disconnect()
+    mutationObserver = null
+  }
+  if (extractTimer) {
+    clearTimeout(extractTimer)
+    extractTimer = null
+  }
+}
+
+// 监听标签页切换：重新绑定 observer 并提取大纲
 watch(
-  () => editorStore.content,
-  (newContent) => {
-    if (!newContent) {
-      outline.value = []
-      return
-    }
-
-    const lines = newContent.split('\n')
-    const newOutline: OutlineItem[] = []
-    const headingRegex = /^(#{1,6})\s+(.+)$/
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i]
-      const match = line.match(headingRegex)
-      if (match) {
-        newOutline.push({
-          id: `heading-${newOutline.length}`,
-          level: match[1].length,
-          text: match[2].trim(),
-          originalIndex: newOutline.length
-        })
-      }
-    }
-
-    outline.value = newOutline
-  },
-  { immediate: true }
+  () => editorStore.activeTabId,
+  () => {
+    // 给编辑器 DOM 一点时间完成渲染后再重新绑定
+    nextTick(() => {
+      setTimeout(startObserving, 200)
+    })
+  }
 )
 
 function scrollToHeading(index: number) {
   activeIndex.value = index
-  const headings = document.querySelectorAll('.ProseMirror h1, .ProseMirror h2, .ProseMirror h3, .ProseMirror h4, .ProseMirror h5, .ProseMirror h6')
+  const headings = document.querySelectorAll(HEADING_SELECTOR)
   if (headings && headings.length > index) {
     const target = headings[index] as HTMLElement
     target.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -116,7 +158,7 @@ function scrollToHeading(index: number) {
 function updateActiveHeading() {
   const container = document.querySelector('.editor-root')
   if (!container) return
-  const headings = document.querySelectorAll('.ProseMirror h1, .ProseMirror h2, .ProseMirror h3, .ProseMirror h4, .ProseMirror h5, .ProseMirror h6')
+  const headings = document.querySelectorAll(HEADING_SELECTOR)
   if (!headings.length) return
   const containerTop = container.getBoundingClientRect().top
   let current = -1
@@ -136,11 +178,15 @@ let scrollEl: Element | null = null
 onMounted(() => {
   scrollEl = document.querySelector('.editor-root')
   scrollEl?.addEventListener('scroll', updateActiveHeading, { passive: true })
+
+  // 初始延迟启动 observer，等待编辑器 DOM 就绪
+  setTimeout(startObserving, 500)
   updateActiveHeading()
 })
 
 onUnmounted(() => {
   scrollEl?.removeEventListener('scroll', updateActiveHeading)
+  stopObserving()
 })
 </script>
 
