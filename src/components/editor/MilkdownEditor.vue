@@ -21,6 +21,7 @@ import { linkTooltipPlugin } from '@milkdown/kit/component/link-tooltip'
 import { listItemBlockComponent } from '@milkdown/kit/component/list-item-block'
 import { languages } from '@codemirror/language-data'
 import { oneDark } from '@codemirror/theme-one-dark'
+import { EditorView } from '@codemirror/view'
 import { convertFileSrc } from '@tauri-apps/api/core'
 import { math } from '@milkdown/plugin-math'
 import 'katex/dist/katex.min.css'
@@ -130,7 +131,7 @@ useEditor((root) =>
       ctx.update(codeBlockConfig.key, (defaultCfg) => ({
         ...defaultCfg,
         languages,
-        extensions: [oneDark],
+        extensions: [oneDark, EditorView.lineWrapping],
         searchPlaceholder: '搜索语言...',
         noResultText: '未找到匹配语言',
         copyText: '复制',

@@ -27,6 +27,21 @@
   color: var(--ed-text);
 }
 
+/* 文本选中色 — Typora 风格浅蓝 */
+.editor-root ::selection {
+  background: #B4D5FE !important;
+  color: inherit;
+}
+
+/* CodeMirror 代码块选中色 */
+.editor-root .cm-editor .cm-selectionBackground {
+  background: #B4D5FE !important;
+}
+
+.editor-root .cm-editor.cm-focused .cm-selectionBackground {
+  background: #B4D5FE !important;
+}
+
 /* ---- 标题 ---- */
 .editor-root .ProseMirror h1 {
   font-size: 30px;
@@ -157,7 +172,9 @@
   border-radius: var(--radius-lg);
   padding: var(--space-4);
   margin: var(--space-4) 0;
-  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .editor-root .ProseMirror pre code {
@@ -242,12 +259,9 @@
   color: var(--ed-code-block-text);
 }
 
-/* 代码块工具栏容器 (.tools) */
+/* 代码块工具栏 — 隐藏 */
 .editor-root .milkdown-code-block .tools {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--space-2) var(--space-3);
+  display: none;
 }
 
 /* 语言选择按钮 */
@@ -265,8 +279,7 @@
   font-family: var(--font-sans);
   line-height: 16px;
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out, background-color 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .editor-root .milkdown-code-block .tools .language-button:hover {
@@ -304,7 +317,6 @@
   background: rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.5);
   padding: 4px 10px;
-  opacity: 0;
   cursor: pointer;
   border: none;
   border-radius: var(--radius-sm);
@@ -312,7 +324,7 @@
   line-height: 16px;
   font-weight: 600;
   font-family: var(--font-sans);
-  transition: opacity 0.2s ease-in-out, background-color 0.15s ease;
+  transition: background-color 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -340,14 +352,7 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* hover 代码块时显示工具按钮 */
-.editor-root .milkdown-code-block:hover .language-button {
-  opacity: 1;
-}
 
-.editor-root .milkdown-code-block:hover .tools-button-group > button {
-  opacity: 1;
-}
 
 /* 语言列表弹窗 */
 .editor-root .milkdown-code-block .list-wrapper {
@@ -456,6 +461,14 @@
 .editor-root .cm-editor .cm-content {
   padding: var(--space-3) var(--space-4);
   color: var(--ed-code-block-text);
+  white-space: pre-wrap !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.editor-root .cm-editor .cm-line {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .editor-root .cm-editor .cm-gutters {
