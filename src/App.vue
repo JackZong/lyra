@@ -1,9 +1,11 @@
 <template>
   <div class="app-layout">
+    <!-- 侧边栏关闭时，左下角悬浮展开按钮 -->
     <button
-      class="top-toggle-sidebar-btn"
+      v-if="!settings.sidebarOpen"
+      class="floating-expand-btn"
       @click="settings.toggleSidebar()"
-      :title="settings.sidebarOpen ? t.app.hideSidebar : t.app.showSidebar"
+      :title="t.app.showSidebar"
     >
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -60,7 +62,7 @@ const appWindow = getCurrentWindow()
 watch(
   () => [editorStore.currentFileName, editorStore.isDirty] as const,
   ([name, dirty]) => {
-    const suffix = dirty ? ' — 已编辑' : ''
+    const suffix = dirty ? ` — ${t.value.titlebar.edited}` : ''
     appWindow.setTitle(`${name}${suffix}`)
   },
   { immediate: true }
@@ -195,6 +197,32 @@ onUnmounted(() => {
   flex: 1;
   display: flex;
   overflow: hidden;
+  position: relative;
+}
+
+.floating-expand-btn {
+  position: absolute;
+  left: 6px;
+  bottom: 8px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  z-index: 50;
+  transition: all 0.12s ease;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.floating-expand-btn:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
 }
 
 .top-right-btns {
@@ -205,38 +233,6 @@ onUnmounted(() => {
   align-items: center;
   gap: 4px;
   z-index: 30;
-}
-
-.top-toggle-sidebar-btn,
-.top-settings-btn {
-  position: absolute;
-  top: 6px;
-  width: 24px;
-  height: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--color-text-tertiary);
-  cursor: pointer;
-  z-index: 30;
-  transition: all 0.12s ease;
-}
-
-.top-toggle-sidebar-btn {
-  right: 34px;
-}
-
-.top-settings-btn {
-  right: 8px;
-}
-
-.top-toggle-sidebar-btn:hover,
-.top-settings-btn:hover {
-  background: var(--color-bg-hover);
-  color: var(--color-text-primary);
 }
 
 .sidebar-resize-handle {

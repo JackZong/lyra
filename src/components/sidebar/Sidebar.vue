@@ -73,26 +73,37 @@
       </template>
     </div>
 
-    <div v-if="settings.sidebarTab === 'files'" class="sidebar-footer">
-      <button class="footer-btn" :title="t.sidebar.newFile" @click="createQuickFile">
+    <div class="sidebar-footer">
+      <div class="footer-left" v-if="settings.sidebarTab === 'files'">
+        <button class="footer-btn" :title="t.sidebar.newFile" @click="createQuickFile">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <button class="footer-btn" :title="t.sidebar.newFolder" @click="createQuickFolder">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            <line x1="12" y1="11" x2="12" y2="17"></line>
+            <line x1="9" y1="14" x2="15" y2="14"></line>
+          </svg>
+        </button>
+        <button class="footer-btn" :title="t.sidebar.openFolder" @click="files.openWorkspace()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- 占位元素，用于 flex-between 对齐 -->
+      <div v-else></div>
+
+      <button class="footer-btn toggle-sidebar-btn" @click="settings.toggleSidebar()" :title="settings.sidebarOpen ? t.app.hideSidebar : t.app.showSidebar">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="9" y1="3" x2="9" y2="21"></line>
         </svg>
       </button>
-      <button class="footer-btn" :title="t.sidebar.newFolder" @click="createQuickFolder">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-          <line x1="12" y1="11" x2="12" y2="17"></line>
-          <line x1="9" y1="14" x2="15" y2="14"></line>
-        </svg>
-      </button>
-      <button class="footer-btn" :title="t.sidebar.openFolder" @click="files.openWorkspace()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-        </svg>
-      </button>
-      <span class="footer-label">{{ t.sidebar.files }}</span>
     </div>
   </aside>
 </template>
@@ -313,11 +324,18 @@ async function createQuickFolder() {
   height: 28px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 6px;
   padding: 0 8px;
   border-top: 1px solid var(--color-border-subtle);
   background: var(--color-bg-tertiary);
   flex-shrink: 0;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .footer-btn {
@@ -337,13 +355,6 @@ async function createQuickFolder() {
 .footer-btn:hover {
   color: var(--color-text-primary);
   background: var(--color-bg-hover);
-}
-
-.footer-label {
-  margin-left: auto;
-  font-size: 12px;
-  color: var(--color-text-tertiary);
-  line-height: 1;
 }
 
 /* Night 模式强制覆盖：保证左侧菜单为暗黑底色 */
