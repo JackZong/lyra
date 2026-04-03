@@ -1,6 +1,6 @@
 [package]
 name = "lyra"
-version = "0.1.0"
+version = "1.1.0"
 description = "Lyra — 优雅的所见即所得 Markdown 编辑器"
 authors = ["jack"]
 edition = "2021"
